@@ -10,14 +10,31 @@ import frangoCaipira from "@/assets/frango-caipira.jpg";
 import polpasFrutas from "@/assets/polpas-frutas.jpg";
 import produtosRoca from "@/assets/produtos-roca.jpg";
 
+import flowerBranch from "@/assets/flower_branch.png";
+
 const Index = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <Header />
+    <div className="min-h-screen bg-background pb-20 relative overflow-hidden">
+      {/* Ribbon Background */}
+      <div className="ribbon-container top-40 -left-1/4 rotate-[-15deg] bg-primary opacity-10">
+        <div className="ribbon-text text-primary-foreground">
+          RECANTO DAS FLORES • DIRETO DA GRANJA • RECANTO DAS FLORES • DIRETO DA NATUREZA • RECANTO DAS FLORES • 
+        </div>
+      </div>
+      
+      {/* Flower Branch Background */}
+      <img 
+        src={flowerBranch} 
+        alt="" 
+        className="absolute top-1/3 -right-20 w-80 h-auto opacity-20 pointer-events-none mix-blend-multiply z-0" 
+      />
 
-      <main className="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
+      <div className="relative z-10 w-full">
+        <Header />
+
+        <main className="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
         {/* Hero Banner */}
         <div className="relative mx-3 mt-3 rounded-xl overflow-hidden">
           <img src={heroBanner} alt="Produtos frescos da granja" className="w-full h-44 object-cover" />
@@ -142,6 +159,8 @@ const Index = () => {
           </div>
         </div>
       </main>
+
+      </div>
 
       <BottomNav />
     </div>

@@ -98,4 +98,34 @@
   .glow-gold {
     box-shadow: 0 0 20px hsl(330 75% 60% / 0.2), 0 0 40px hsl(330 75% 60% / 0.1);
   }
+
+  .ribbon-container {
+    position: absolute;
+    width: 200%;
+    height: 4rem;
+    background: var(--primary);
+    transform: rotate(-15deg);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    z-index: 0;
+    opacity: 0.15;
+    pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .ribbon-text {
+    display: inline-block;
+    white-space: nowrap;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    color: var(--primary-foreground);
+    animation: marquee 30s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }

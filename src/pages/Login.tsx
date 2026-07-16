@@ -3,10 +3,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Lock, Mail, User, Gift, Shield, Eye, EyeOff } from "lucide-react";
+import { Lock, Mail, User, Gift, Shield, Eye, EyeOff, Phone } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import logoRecantoDasFlores from "@/assets/logo-recantodasflores.png";
+import flowerBranch from "@/assets/flower_branch.png";
 import { supabase } from "@/integrations/supabase/client";
 
 type LoginMode = "select" | "cliente" | "admin";
@@ -29,6 +30,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [referralCode, setReferralCode] = useState("");
 
   useEffect(() => {
@@ -83,7 +85,12 @@ const Login = () => {
     setLoading(true);
 
     if (isSignUp) {
-      const { error } = await signUp(email, password, displayName);
+      if (!whatsapp) {
+        toast.error("Por favor, informe seu WhatsApp.");
+        setLoading(false);
+        return;
+      }
+      const { error } = await signUp(email, password, displayName, whatsapp);
       if (error) {
         toast.error(error.message);
       } else {
@@ -194,7 +201,12 @@ const Login = () => {
     }
 
     // User doesn't exist - create new account
-    const { error: signUpError } = await signUp(email, password, adminName);
+    if (!whatsapp) {
+      toast.error("Por favor, informe seu WhatsApp.");
+      setLoading(false);
+      return;
+    }
+    const { error: signUpError } = await signUp(email, password, adminName, whatsapp);
     if (signUpError) {
       if (signUpError.message?.includes("already registered") || signUpError.message?.includes("already exists")) {
         toast.error("Email já cadastrado. Verifique sua senha e tente novamente.");
@@ -312,8 +324,28 @@ const Login = () => {
   // ── Mode Selection Screen ──
   if (mode === "select") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-        <motion.img
+      <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
+        {/* Ribbon Background */}
+        <div className="ribbon-container top-1/4 -left-1/4 rotate-[-15deg] bg-primary opacity-20">
+          <div className="ribbon-text text-primary-foreground">
+            RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • 
+          </div>
+        </div>
+        <div className="ribbon-container top-2/3 -right-1/4 rotate-[-15deg] bg-accent opacity-20">
+          <div className="ribbon-text text-accent-foreground" style={{ animationDirection: 'reverse' }}>
+            DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • 
+          </div>
+        </div>
+        
+        {/* Flower Branch Background */}
+        <img 
+          src={flowerBranch} 
+          alt="" 
+          className="absolute -right-20 -bottom-20 w-96 h-auto opacity-30 pointer-events-none mix-blend-multiply drop-shadow-2xl z-0" 
+        />
+
+        <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+          <motion.img
           src={logoRecantoDasFlores}
           alt="Recanto das Flores"
           initial={{ scale: 1.8, opacity: 0 }}
@@ -348,6 +380,7 @@ const Login = () => {
             </Button>
           </div>
         </motion.div>
+        </div>
       </div>
     );
   }
@@ -387,10 +420,18 @@ const Login = () => {
   // ── Admin Login/Signup ──
   if (mode === "admin") {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-        <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-primary text-sm font-semibold mb-4 max-w-sm w-full mx-auto">
-          ← Voltar
-        </button>
+      <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
+        <div className="ribbon-container top-1/2 -left-1/4 rotate-[15deg] bg-primary opacity-10">
+          <div className="ribbon-text text-primary-foreground">
+            ÁREA ADMINISTRATIVA • ACESSO RESTRITO • ÁREA ADMINISTRATIVA • ACESSO RESTRITO • ÁREA ADMINISTRATIVA • ACESSO RESTRITO • 
+          </div>
+        </div>
+        <img src={flowerBranch} alt="" className="absolute -left-20 top-10 w-80 h-auto opacity-20 pointer-events-none mix-blend-multiply z-0" />
+        
+        <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+          <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-primary text-sm font-semibold mb-4 w-full mx-auto">
+            ← Voltar
+          </button>
         <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-full max-w-sm object-contain mb-4" />
         <div className="flex items-center gap-2 mb-2">
           <Shield size={20} className="text-primary" />
@@ -404,14 +445,20 @@ const Login = () => {
 
         <form onSubmit={adminSubMode === "signup" ? handleAdminSignUp : handleAdminSubmit} className="w-full max-w-sm space-y-4">
           {adminSubMode === "signup" && (
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <Input type="text" placeholder="Seu nome completo" value={adminName} onChange={(e) => setAdminName(e.target.value)} className="pl-10 bg-secondary border-border" required />
-            </div>
+            <>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                <Input type="text" placeholder="Seu nome completo" value={adminName} onChange={(e) => setAdminName(e.target.value)} className="pl-10 bg-secondary/50 backdrop-blur-md border-border" required />
+              </div>
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                <Input type="tel" placeholder="Seu WhatsApp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="pl-10 bg-secondary/50 backdrop-blur-md border-border" required />
+              </div>
+            </>
           )}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 bg-secondary border-border" required />
+            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="pl-10 bg-secondary/50 backdrop-blur-md border-border" required />
           </div>
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
@@ -446,16 +493,25 @@ const Login = () => {
             {adminSubMode === "login" ? "Solicitar conta admin" : "Já tenho conta admin"}
           </button>
         </div>
+        </div>
       </div>
     );
   }
 
   // ── Client Login/Signup ──
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-      <button onClick={() => { setMode("select"); setIsSignUp(false); setEmail(""); setPassword(""); }} className="self-start text-primary text-sm font-semibold mb-4 max-w-sm w-full mx-auto">
-        ← Voltar
-      </button>
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
+      <div className="ribbon-container top-1/3 -left-1/4 rotate-[-25deg] bg-primary opacity-15">
+        <div className="ribbon-text text-primary-foreground">
+          RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • 
+        </div>
+      </div>
+      <img src={flowerBranch} alt="" className="absolute -right-20 -bottom-10 w-96 h-auto opacity-30 pointer-events-none mix-blend-multiply z-0" />
+      
+      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+        <button onClick={() => { setMode("select"); setIsSignUp(false); setEmail(""); setPassword(""); }} className="self-start text-primary text-sm font-semibold mb-4 w-full mx-auto">
+          ← Voltar
+        </button>
       <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-full max-w-sm object-contain mb-6" />
       <h1 className="text-2xl font-display text-gold-gradient mb-2">
         {isSignUp ? "Criar Conta" : "Acesso Cliente"}
@@ -467,11 +523,15 @@ const Login = () => {
           <>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <Input type="text" placeholder="Seu nome" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="pl-10 bg-secondary border-border" />
+              <Input type="text" placeholder="Seu nome" value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="pl-10 bg-secondary/50 backdrop-blur-md border-border" required />
+            </div>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+              <Input type="tel" placeholder="Seu WhatsApp" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} className="pl-10 bg-secondary/50 backdrop-blur-md border-border" required />
             </div>
             <div className="relative">
               <Gift className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-              <Input type="text" placeholder="Código de indicação (opcional)" value={referralCode} onChange={(e) => setReferralCode(e.target.value.toUpperCase())} className="pl-10 bg-secondary border-border uppercase tracking-wider" maxLength={8} />
+              <Input type="text" placeholder="Código de indicação (opcional)" value={referralCode} onChange={(e) => setReferralCode(e.target.value.toUpperCase())} className="pl-10 bg-secondary/50 backdrop-blur-md border-border uppercase tracking-wider" maxLength={8} />
             </div>
           </>
         )}
@@ -513,6 +573,7 @@ const Login = () => {
         <button onClick={() => setIsSignUp(!isSignUp)} className="text-sm text-primary hover:underline font-semibold">
           {isSignUp ? "Já tenho conta" : "Criar conta"}
         </button>
+      </div>
       </div>
     </div>
   );
