@@ -119,38 +119,38 @@
 
 @layer utilities {
   .gradient-gold {
-    background: linear-gradient(135deg, hsl(330 75% 60%), hsl(340 80% 50%)); /* Rose gradient */
+    background: linear-gradient(135deg, hsl(var(--accent)), hsl(340 80% 50%)); /* Rose gradient */
   }
   .gradient-card {
-    background: linear-gradient(145deg, hsl(0 0% 100%), hsl(120 20% 96%));
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--background)));
   }
   .gradient-hero {
-    background: linear-gradient(180deg, transparent 0%, hsl(120 20% 96% / 0.8) 60%, hsl(120 20% 96%) 100%);
+    background: linear-gradient(180deg, transparent 0%, hsl(var(--background) / 0.8) 60%, hsl(var(--background)) 100%);
   }
   .text-gold-gradient {
-    background: linear-gradient(135deg, hsl(330 75% 60%), hsl(340 80% 50%));
+    background: linear-gradient(135deg, hsl(var(--accent)), hsl(340 80% 50%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .shadow-warm {
-    box-shadow: 0 4px 20px hsl(150 40% 15% / 0.05), 0 0 40px hsl(330 75% 60% / 0.05);
+    box-shadow: 0 4px 20px hsl(var(--foreground) / 0.05), 0 0 40px hsl(var(--accent) / 0.05);
   }
   .shadow-gold {
-    box-shadow: 0 4px 20px hsl(330 75% 60% / 0.2);
+    box-shadow: 0 4px 20px hsl(var(--accent) / 0.2);
   }
   .border-warm {
-    border: 1px solid hsl(120 20% 85%);
+    border: 1px solid hsl(var(--border));
   }
   .glow-gold {
-    box-shadow: 0 0 20px hsl(330 75% 60% / 0.2), 0 0 40px hsl(330 75% 60% / 0.1);
+    box-shadow: 0 0 20px hsl(var(--accent) / 0.2), 0 0 40px hsl(var(--accent) / 0.1);
   }
 
   .ribbon-container {
     position: absolute;
     width: 200%;
     height: 4rem;
-    background: var(--primary);
+    background: hsl(var(--primary));
     transform: rotate(-15deg);
     display: flex;
     align-items: center;
@@ -167,7 +167,7 @@
     font-weight: 800;
     font-size: 1.5rem;
     letter-spacing: 0.1em;
-    color: var(--primary-foreground);
+    color: hsl(var(--primary-foreground));
     animation: marquee 30s linear infinite;
   }
 
