@@ -148,6 +148,20 @@ const Login = () => {
     setLoading(false);
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/home`
+      }
+    });
+    if (error) {
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
   const handleAdminSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -561,6 +575,28 @@ const Login = () => {
 
         <Button type="submit" disabled={loading} className="w-full gradient-gold text-primary-foreground font-bold text-base h-12 rounded-xl">
           {loading ? "Aguarde..." : isSignUp ? "Criar Conta" : "Entrar"}
+        </Button>
+
+        <div className="relative flex items-center py-2">
+          <div className="flex-grow border-t border-border"></div>
+          <span className="flex-shrink-0 mx-4 text-muted-foreground text-xs uppercase">ou</span>
+          <div className="flex-grow border-t border-border"></div>
+        </div>
+
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={handleGoogleLogin} 
+          disabled={loading} 
+          className="w-full bg-white text-black hover:bg-gray-100 border-gray-200 font-bold text-base h-12 rounded-xl flex items-center justify-center gap-3"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.67 15.63 16.89 16.81 15.73 17.58V20.34H19.3C21.39 18.42 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
+            <path d="M12 23C14.97 23 17.46 22.02 19.3 20.34L15.73 17.58C14.74 18.25 13.48 18.66 12 18.66C9.13 18.66 6.7 16.73 5.84 14.13H2.15V16.98C3.96 20.58 7.69 23 12 23Z" fill="#34A853"/>
+            <path d="M5.84 14.13C5.62 13.47 5.5 12.75 5.5 12C5.5 11.25 5.62 10.53 5.84 9.87V7.02H2.15C1.41 8.5 1 10.2 1 12C1 13.8 1.41 15.5 2.15 16.98L5.84 14.13Z" fill="#FBBC05"/>
+            <path d="M12 5.34C13.62 5.34 15.07 5.9 16.21 6.99L19.38 3.82C17.45 2.02 14.96 1 12 1C7.69 1 3.96 3.42 2.15 7.02L5.84 9.87C6.7 7.27 9.13 5.34 12 5.34Z" fill="#EA4335"/>
+          </svg>
+          Continuar com o Google
         </Button>
       </form>
 
