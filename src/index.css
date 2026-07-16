@@ -54,6 +54,53 @@
     --sidebar-border: 120 20% 88%;
     --sidebar-ring: 145 50% 40%;
   }
+
+  .dark {
+    --background: 150 40% 10%; /* Very dark green/black */
+    --foreground: 120 20% 98%; /* Light text */
+
+    --card: 150 40% 13%;
+    --card-foreground: 120 20% 98%;
+
+    --popover: 150 40% 13%;
+    --popover-foreground: 120 20% 98%;
+
+    --primary: 145 50% 50%; /* Lighter emerald green for dark mode */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 150 30% 20%;
+    --secondary-foreground: 330 70% 90%;
+
+    --muted: 150 30% 20%;
+    --muted-foreground: 120 20% 70%;
+
+    --accent: 330 70% 50%; /* Rose pink */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 30% 20%;
+    --input: 150 30% 20%;
+    --ring: 145 50% 50%;
+
+    --wood: 150 40% 80%; 
+    --wood-light: 150 30% 70%;
+    --gold: 330 70% 50%; 
+    --gold-light: 330 70% 40%;
+    --cream: 150 40% 12%;
+    --green-farm: 145 50% 50%;
+    --green-farm-light: 145 45% 45%;
+
+    --sidebar-background: 150 40% 11%;
+    --sidebar-foreground: 120 20% 98%;
+    --sidebar-primary: 145 50% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 30% 20%;
+    --sidebar-accent-foreground: 330 70% 90%;
+    --sidebar-border: 150 30% 20%;
+    --sidebar-ring: 145 50% 50%;
+  }
 }
 
 @layer base {

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { InstallPWA } from "@/components/InstallPWA";
 import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
@@ -35,39 +36,41 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <InstallPWA />
-          <Analytics />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/home" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/ovos-caipira" element={<ProtectedRoute><OvosCaipira /></ProtectedRoute>} />
-              <Route path="/frango" element={<ProtectedRoute><Frango /></ProtectedRoute>} />
-              <Route path="/polpas" element={<ProtectedRoute><Polpas /></ProtectedRoute>} />
-              <Route path="/produtos" element={<ProtectedRoute><Produtos /></ProtectedRoute>} />
-              <Route path="/carrinho" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
-              <Route path="/pagamento" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
-              <Route path="/cashback" element={<ProtectedRoute><Cashback /></ProtectedRoute>} />
-              <Route path="/escanear" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
-              <Route path="/entregas" element={<ProtectedRoute><Entregas /></ProtectedRoute>} />
-              <Route path="/conta" element={<ProtectedRoute><Conta /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-              <Route path="/parceiro-produtos" element={<ProtectedRoute><ParceiroProdutos /></ProtectedRoute>} />
-              <Route path="/historico" element={<ProtectedRoute><Historico /></ProtectedRoute>} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </CartProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+  <ThemeProvider defaultTheme="dark" storageKey="recanto-theme">
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <InstallPWA />
+            <Analytics />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/home" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/ovos-caipira" element={<ProtectedRoute><OvosCaipira /></ProtectedRoute>} />
+                <Route path="/frango" element={<ProtectedRoute><Frango /></ProtectedRoute>} />
+                <Route path="/polpas" element={<ProtectedRoute><Polpas /></ProtectedRoute>} />
+                <Route path="/produtos" element={<ProtectedRoute><Produtos /></ProtectedRoute>} />
+                <Route path="/carrinho" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                <Route path="/pagamento" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
+                <Route path="/cashback" element={<ProtectedRoute><Cashback /></ProtectedRoute>} />
+                <Route path="/escanear" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
+                <Route path="/entregas" element={<ProtectedRoute><Entregas /></ProtectedRoute>} />
+                <Route path="/conta" element={<ProtectedRoute><Conta /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+                <Route path="/parceiro-produtos" element={<ProtectedRoute><ParceiroProdutos /></ProtectedRoute>} />
+                <Route path="/historico" element={<ProtectedRoute><Historico /></ProtectedRoute>} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </CartProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
