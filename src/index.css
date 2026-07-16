@@ -1,0 +1,29 @@
+:root {
+  --text: #ffffff;
+  --text-muted: #a1a1aa;
+  --bg: #09090b;
+  --accent: #10b981; /* Emerald green for nature/flowers */
+  --accent-hover: #059669;
+  
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  font-family: var(--sans);
+  color: var(--text);
+  background-color: var(--bg);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% -20%, #1c3329 0%, #09090b 60%);
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: inherit;
+}
