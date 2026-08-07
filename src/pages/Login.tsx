@@ -7,6 +7,7 @@ import { Lock, Mail, User, Gift, Shield, Eye, EyeOff, Phone } from "lucide-react
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import logoRecantoDasFlores from "@/assets/logo-recantodasflores.png";
+import loginBgImage from "@/assets/login-bg.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { InstallPWA } from "@/components/InstallPWA";
 
@@ -14,7 +15,7 @@ const LoginLayout = ({ children }: { children: React.ReactNode }) => (
   <div 
     className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6"
     style={{
-      backgroundImage: 'url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1080&q=80")',
+      backgroundImage: `url(${loginBgImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center'
     }}
