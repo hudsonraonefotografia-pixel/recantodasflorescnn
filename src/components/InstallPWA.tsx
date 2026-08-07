@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Download, Share, PlusSquare, X } from "lucide-react";
+﻿import React, { useEffect, useState } from "react";
+import { Download, Share, PlusSquare, X, Smartphone } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
-export function InstallPWA() {
+export function InstallPWA({ inline = false }: { inline?: boolean }) {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/";
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [showIOSInstruction, setShowIOSInstruction] = useState(false);
@@ -37,7 +40,7 @@ export function InstallPWA() {
 
     if (!deferredPrompt) {
       if (import.meta.env.DEV) {
-        alert("Modo Dev: No navegador do PC, clique no ícone de instalação na barra de endereços, ou teste em um dispositivo móvel real para ver a tela nativa.");
+        alert("Modo Dev: No navegador do PC, clique no Ã­cone de instalaÃ§Ã£o na barra de endereÃ§os, ou teste em um dispositivo mÃ³vel real para ver a tela nativa.");
       }
       return;
     }
@@ -56,6 +59,43 @@ export function InstallPWA() {
   const isDev = import.meta.env.DEV;
   if (!deferredPrompt && !isIOS && !isDev) return null;
 
+  // Se for versÃ£o flutuante e estiver na tela de login, nÃ£o mostra (pois jÃ¡ terÃ¡ o botÃ£o inline)
+  if (!inline && isLoginPage) return null;
+
+  const InstallContent = (
+    <>
+      {showIOSInstruction ? (
+        <div className={`bg-background/50 p-3 rounded-lg text-sm flex flex-col gap-2 ${inline ? '' : 'mt-2'}`}>
+          <p className="font-medium text-foreground">Como instalar no iOS:</p>
+          <ol className="list-decimal pl-5 text-muted-foreground space-y-1">
+            <li className="flex items-center gap-1">
+              Toque no botÃ£o compartilhar <Share className="w-3 h-3 inline" />
+            </li>
+            <li className="flex items-center gap-1">
+              Selecione "Adicionar Ã  Tela de InÃ­cio" <PlusSquare className="w-3 h-3 inline" />
+            </li>
+          </ol>
+        </div>
+      ) : (
+        <button
+          onClick={handleInstallClick}
+          className={
+            inline
+              ? "w-full h-12 border-2 border-white/20 text-white font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition-colors backdrop-blur-sm"
+              : "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-gold"
+          }
+        >
+          {inline ? <Smartphone size={18} /> : null}
+          {isIOS ? "Como Instalar o App" : "Instalar Aplicativo"}
+        </button>
+      )}
+    </>
+  );
+
+  if (inline) {
+    return InstallContent;
+  }
+
   return (
     <div className="fixed bottom-20 left-4 right-4 bg-card border border-border shadow-warm rounded-xl p-4 z-50 flex flex-col gap-3 animate-in slide-in-from-bottom-5">
       <div className="flex justify-between items-start">
@@ -66,7 +106,7 @@ export function InstallPWA() {
           <div>
             <h3 className="font-semibold text-sm text-foreground">Instalar Aplicativo</h3>
             <p className="text-xs text-muted-foreground">
-              Instale o nosso app para uma melhor experiência
+              Instale o nosso app para uma melhor experiÃªncia
             </p>
           </div>
         </div>
@@ -78,26 +118,8 @@ export function InstallPWA() {
         </button>
       </div>
 
-      {showIOSInstruction ? (
-        <div className="bg-background/50 p-3 rounded-lg text-sm flex flex-col gap-2 mt-2">
-          <p className="font-medium text-foreground">Como instalar no iOS:</p>
-          <ol className="list-decimal pl-5 text-muted-foreground space-y-1">
-            <li className="flex items-center gap-1">
-              Toque no botão compartilhar <Share className="w-3 h-3 inline" /> na barra do navegador.
-            </li>
-            <li className="flex items-center gap-1">
-              Role a tela e toque em "Adicionar à Tela de Início" <PlusSquare className="w-3 h-3 inline" />.
-            </li>
-          </ol>
-        </div>
-      ) : (
-        <button
-          onClick={handleInstallClick}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-gold"
-        >
-          {isIOS ? "Como Instalar" : "Instalar Agora"}
-        </button>
-      )}
+      {InstallContent}
     </div>
   );
 }
+

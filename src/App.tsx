@@ -43,9 +43,9 @@ const App = () => (
           <TooltipProvider>
             <Toaster />
             <Sonner />
-            <InstallPWA />
             <Analytics />
             <BrowserRouter>
+              <InstallPWA />
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/home" element={<ProtectedRoute><Index /></ProtectedRoute>} />

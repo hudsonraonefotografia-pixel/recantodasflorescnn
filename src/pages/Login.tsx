@@ -7,8 +7,24 @@ import { Lock, Mail, User, Gift, Shield, Eye, EyeOff, Phone } from "lucide-react
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import logoRecantoDasFlores from "@/assets/logo-recantodasflores.png";
-import flowerBranch from "@/assets/flower_branch.png";
 import { supabase } from "@/integrations/supabase/client";
+import { InstallPWA } from "@/components/InstallPWA";
+
+const LoginLayout = ({ children }: { children: React.ReactNode }) => (
+  <div 
+    className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6"
+    style={{
+      backgroundImage: 'url("https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1080&q=80")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}
+  >
+    <div className="absolute inset-0 bg-background/85 backdrop-blur-[2px] z-0" />
+    <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
+      {children}
+    </div>
+  </div>
+);
 
 type LoginMode = "select" | "cliente" | "admin";
 type AdminSubMode = "login" | "signup";
@@ -338,34 +354,14 @@ const Login = () => {
   // ── Mode Selection Screen ──
   if (mode === "select") {
     return (
-      <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
-        {/* Ribbon Background */}
-        <div className="ribbon-container top-1/4 -left-1/4 rotate-[-15deg] bg-primary opacity-20">
-          <div className="ribbon-text text-primary-foreground">
-            RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • 
-          </div>
-        </div>
-        <div className="ribbon-container top-2/3 -right-1/4 rotate-[-15deg] bg-accent opacity-20">
-          <div className="ribbon-text text-accent-foreground" style={{ animationDirection: 'reverse' }}>
-            DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • DIRETO DA GRANJA • FRESCOR GARANTIDO • 
-          </div>
-        </div>
-        
-        {/* Flower Branch Background */}
-        <img 
-          src={flowerBranch} 
-          alt="" 
-          className="absolute -right-20 -bottom-20 w-96 h-auto opacity-30 pointer-events-none mix-blend-multiply drop-shadow-2xl z-0" 
-        />
-
-        <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-          <motion.img
+      <LoginLayout>
+        <motion.img
           src={logoRecantoDasFlores}
           alt="Recanto das Flores"
           initial={{ scale: 1.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-full max-w-sm object-contain mb-6"
+          className="w-full max-w-sm object-contain mb-6 drop-shadow-xl"
         />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -373,36 +369,40 @@ const Login = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="flex flex-col items-center w-full"
         >
-          <h1 className="text-2xl font-display text-gold-gradient mb-2">Bem-vindo ao Recanto das Flores</h1>
-          <p className="text-muted-foreground text-sm mb-10">Direto da Granja para sua Mesa!</p>
+          <h1 className="text-2xl font-display text-white mb-2 drop-shadow-md text-center">Bem-vindo ao Recanto das Flores</h1>
+          <p className="text-white/90 text-sm mb-8 drop-shadow-md text-center">Direto da Granja para sua Mesa!</p>
 
           <div className="w-full max-w-sm space-y-4">
             <Button
               onClick={() => setMode("cliente")}
-              className="w-full h-14 gradient-gold text-primary-foreground font-bold text-base rounded-xl flex items-center justify-center gap-3"
+              className="w-full h-14 gradient-gold text-primary-foreground font-bold text-base rounded-xl flex items-center justify-center gap-3 shadow-lg"
             >
               <User size={22} />
               Sou Cliente
             </Button>
+            
+            <div className="w-full">
+              <InstallPWA inline={true} />
+            </div>
+
             <Button
               onClick={() => setMode("admin")}
               variant="ghost"
-              className="w-full h-12 text-muted-foreground font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:text-primary hover:bg-primary/5"
+              className="w-full h-12 text-white/90 font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:text-white hover:bg-white/20"
             >
               <Shield size={18} />
               Administrador
             </Button>
           </div>
         </motion.div>
-        </div>
-      </div>
+      </LoginLayout>
     );
   }
 
   // ── Admin Pending Popup ──
   if (showAdminPendingPopup) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
+      <LoginLayout>
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -427,25 +427,17 @@ const Login = () => {
             Entendido
           </Button>
         </motion.div>
-      </div>
+      </LoginLayout>
     );
   }
 
   // ── Admin Login/Signup ──
   if (mode === "admin") {
     return (
-      <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
-        <div className="ribbon-container top-1/2 -left-1/4 rotate-[15deg] bg-primary opacity-10">
-          <div className="ribbon-text text-primary-foreground">
-            ÁREA ADMINISTRATIVA • ACESSO RESTRITO • ÁREA ADMINISTRATIVA • ACESSO RESTRITO • ÁREA ADMINISTRATIVA • ACESSO RESTRITO • 
-          </div>
-        </div>
-        <img src={flowerBranch} alt="" className="absolute -left-20 top-10 w-80 h-auto opacity-20 pointer-events-none mix-blend-multiply z-0" />
-        
-        <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-          <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-primary text-sm font-semibold mb-4 w-full mx-auto">
-            ← Voltar
-          </button>
+      <LoginLayout>
+        <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-white/90 hover:text-white text-sm font-semibold mb-4 w-full mx-auto drop-shadow-md">
+          ← Voltar
+        </button>
         <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-full max-w-sm object-contain mb-4" />
         <div className="flex items-center gap-2 mb-2">
           <Shield size={20} className="text-primary" />
@@ -507,25 +499,16 @@ const Login = () => {
             {adminSubMode === "login" ? "Solicitar conta admin" : "Já tenho conta admin"}
           </button>
         </div>
-        </div>
-      </div>
+      </LoginLayout>
     );
   }
 
   // ── Client Login/Signup ──
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center px-6">
-      <div className="ribbon-container top-1/3 -left-1/4 rotate-[-25deg] bg-primary opacity-15">
-        <div className="ribbon-text text-primary-foreground">
-          RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • PRODUTOS DA NATUREZA • RECANTO DAS FLORES • 
-        </div>
-      </div>
-      <img src={flowerBranch} alt="" className="absolute -right-20 -bottom-10 w-96 h-auto opacity-30 pointer-events-none mix-blend-multiply z-0" />
-      
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center">
-        <button onClick={() => { setMode("select"); setIsSignUp(false); setEmail(""); setPassword(""); }} className="self-start text-primary text-sm font-semibold mb-4 w-full mx-auto">
-          ← Voltar
-        </button>
+    <LoginLayout>
+      <button onClick={() => { setMode("select"); setIsSignUp(false); setEmail(""); setPassword(""); }} className="self-start text-white/90 hover:text-white text-sm font-semibold mb-4 w-full mx-auto drop-shadow-md">
+        ← Voltar
+      </button>
       <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-full max-w-sm object-contain mb-6" />
       <h1 className="text-2xl font-display text-gold-gradient mb-2">
         {isSignUp ? "Criar Conta" : "Acesso Cliente"}
@@ -610,8 +593,7 @@ const Login = () => {
           {isSignUp ? "Já tenho conta" : "Criar conta"}
         </button>
       </div>
-      </div>
-    </div>
+    </LoginLayout>
   );
 };
 
