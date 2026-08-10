@@ -202,16 +202,13 @@ const ContaPage = () => {
             </div>
             <Select value={prQuantidade} onValueChange={setPrQuantidade}>
               <SelectTrigger className="bg-secondary border-border">
-                <SelectValue placeholder="Qtd. de cartelas por semana *" />
+                <SelectValue placeholder="Volume estimado de compras/mês *" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1 cartela (30 ovos)">1 cartela (30 ovos)</SelectItem>
-                <SelectItem value="2 cartelas (60 ovos)">2 cartelas (60 ovos)</SelectItem>
-                <SelectItem value="3 cartelas (90 ovos)">3 cartelas (90 ovos)</SelectItem>
-                <SelectItem value="4 cartelas (120 ovos)">4 cartelas (120 ovos)</SelectItem>
-                <SelectItem value="5 cartelas (150 ovos)">5 cartelas (150 ovos)</SelectItem>
-                <SelectItem value="6-10 cartelas">6 a 10 cartelas</SelectItem>
-                <SelectItem value="10+ cartelas">Mais de 10 cartelas</SelectItem>
+                <SelectItem value="Até R$ 500">Até R$ 500</SelectItem>
+                <SelectItem value="R$ 500 a R$ 1000">R$ 500 a R$ 1000</SelectItem>
+                <SelectItem value="R$ 1000 a R$ 3000">R$ 1000 a R$ 3000</SelectItem>
+                <SelectItem value="Acima de R$ 3000">Acima de R$ 3000</SelectItem>
               </SelectContent>
             </Select>
             <Button onClick={handleSubmitPartnerRequest} disabled={submittingRequest} className="w-full gradient-gold text-primary-foreground font-bold rounded-xl h-12">

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import polpasFrutas from "@/assets/polpas-frutas.jpg";
+import buquesImg from "@/assets/buques.jpg";
 
 interface Produto {
   id: string;
@@ -15,7 +15,7 @@ interface Produto {
   unit_type: string;
 }
 
-const PolpasPage = () => {
+const BuquesPage = () => {
   const { addItem, items } = useCart();
   const [products, setProducts] = useState<Produto[]>([]);
 
@@ -24,7 +24,7 @@ const PolpasPage = () => {
       .from("produtos")
       .select("id, nome, descricao, preco, unit_type")
       .eq("visivel_cliente", true)
-      .eq("categoria", "Polpas Naturais")
+      .eq("categoria", "Buquês")
       .order("sort_order", { ascending: true })
       .then(({ data }) => setProducts(data || []));
   }, []);
@@ -33,8 +33,8 @@ const PolpasPage = () => {
     <div className="min-h-screen bg-background pb-20">
       <Header />
       <main className="max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto px-3 py-4">
-        <img src={polpasFrutas} alt="Polpas de Frutas" className="w-full h-48 object-cover rounded-xl mb-4" />
-        <h2 className="font-display text-2xl font-bold text-foreground mb-4">🍹 Polpas Naturais</h2>
+        <img src={buquesImg} alt="Buquês" className="w-full h-48 object-cover rounded-xl mb-4" />
+        <h2 className="font-display text-2xl font-bold text-foreground mb-4">🌹 Buquês</h2>
         <div className="space-y-3">
           {products.map((p) => (
             <motion.div
@@ -53,8 +53,8 @@ const PolpasPage = () => {
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => {
-                      addItem({ id: p.id, name: p.nome, price: p.preco, variant: p.descricao || "", category: "Polpas Naturais" });
-                      toast.success("Polpa adicionada! 🍹");
+                      addItem({ id: p.id, name: p.nome, price: p.preco, variant: p.descricao || "", category: "Buquês" });
+                      toast.success("Produto adicionado! 🌹");
                     }}
                     className={`text-xs font-bold px-4 py-2 rounded-full ${inCart ? "bg-green-600 text-white" : "gradient-gold text-primary-foreground shadow-gold"}`}
                   >
@@ -74,4 +74,4 @@ const PolpasPage = () => {
   );
 };
 
-export default PolpasPage;
+export default BuquesPage;

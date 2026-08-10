@@ -371,7 +371,7 @@ const Login = () => {
           className="flex flex-col items-center w-full"
         >
           <h1 className="text-2xl font-display text-white mb-2 drop-shadow-md text-center">Bem-vindo ao Recanto das Flores</h1>
-          <p className="text-white/90 text-sm mb-8 drop-shadow-md text-center">Direto da Granja para sua Mesa!</p>
+          <p className="text-white/90 text-sm mb-8 drop-shadow-md text-center">A Arte de Presentear com Emoção!</p>
 
           <div className="w-full max-w-sm space-y-4">
             <Button
@@ -514,7 +514,7 @@ const Login = () => {
       <h1 className="text-2xl font-display text-gold-gradient mb-2">
         {isSignUp ? "Criar Conta" : "Acesso Cliente"}
       </h1>
-      <p className="text-muted-foreground text-sm mb-8">Direto da Granja para sua Mesa!</p>
+      <p className="text-muted-foreground text-sm mb-8">A Arte de Presentear com Emoção!</p>
 
       <form onSubmit={handleClientSubmit} className="w-full max-w-sm space-y-4">
         {isSignUp && (

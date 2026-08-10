@@ -10,9 +10,9 @@ import { InstallPWA } from "@/components/InstallPWA";
 import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
-import OvosCaipira from "./pages/OvosCaipira";
-import Frango from "./pages/Frango";
-import Polpas from "./pages/Polpas";
+import Arranjos from "./pages/Arranjos";
+import Buques from "./pages/Buques";
+import Presentes from "./pages/Presentes";
 import Produtos from "./pages/Produtos";
 import Cart from "./pages/Cart";
 import Payment from "./pages/Payment";
@@ -49,9 +49,9 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/home" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-                <Route path="/ovos-caipira" element={<ProtectedRoute><OvosCaipira /></ProtectedRoute>} />
-                <Route path="/frango" element={<ProtectedRoute><Frango /></ProtectedRoute>} />
-                <Route path="/polpas" element={<ProtectedRoute><Polpas /></ProtectedRoute>} />
+                <Route path="/arranjos" element={<ProtectedRoute><Arranjos /></ProtectedRoute>} />
+                <Route path="/buques" element={<ProtectedRoute><Buques /></ProtectedRoute>} />
+                <Route path="/presentes" element={<ProtectedRoute><Presentes /></ProtectedRoute>} />
                 <Route path="/produtos" element={<ProtectedRoute><Produtos /></ProtectedRoute>} />
                 <Route path="/carrinho" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
                 <Route path="/pagamento" element={<ProtectedRoute><Payment /></ProtectedRoute>} />

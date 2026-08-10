@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import ovosCaipira from "@/assets/ovos-caipira.jpg";
+import arranjosImg from "@/assets/arranjos.jpg";
 import SubscriptionDialog from "@/components/SubscriptionDialog";
 
 const subscriptions = [
@@ -35,7 +35,7 @@ interface Produto {
   unit_type: string;
 }
 
-const OvosCaipiraPage = () => {
+const ArranjosPage = () => {
   const { addItem, items } = useCart();
   const [selectedPlan, setSelectedPlan] = useState<(typeof subscriptions)[0] | null>(null);
   const [products, setProducts] = useState<Produto[]>([]);
@@ -45,22 +45,22 @@ const OvosCaipiraPage = () => {
       .from("produtos")
       .select("id, nome, descricao, preco, categoria, unit_type")
       .eq("visivel_cliente", true)
-      .eq("categoria", "Ovos Caipira")
+      .eq("categoria", "Arranjos")
       .order("sort_order", { ascending: true })
       .then(({ data }) => setProducts(data || []));
   }, []);
 
   const handleAdd = (p: Produto) => {
-    addItem({ id: p.id, name: p.nome, price: p.preco, variant: p.descricao || "", category: "Ovos Caipira" });
-    toast.success("Produto adicionado ao carrinho! 🥚");
+    addItem({ id: p.id, name: p.nome, price: p.preco, variant: p.descricao || "", category: "Arranjos" });
+    toast.success("Produto adicionado ao carrinho! 💐");
   };
 
   return (
     <div className="min-h-screen bg-background pb-20">
       <Header />
       <main className="max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto px-3 py-4">
-        <img src={ovosCaipira} alt="Ovos Caipira" className="w-full h-48 object-cover rounded-xl mb-4" />
-        <h2 className="font-display text-2xl font-bold text-foreground mb-4">🥚 Ovos Caipira</h2>
+        <img src={arranjosImg} alt="Arranjos" className="w-full h-48 object-cover rounded-xl mb-4" />
+        <h2 className="font-display text-2xl font-bold text-foreground mb-4">💐 Arranjos</h2>
 
         <div className="space-y-3">
           {products.map((p) => (
@@ -93,7 +93,7 @@ const OvosCaipiraPage = () => {
           )}
         </div>
 
-        <h3 className="font-display text-lg font-bold text-foreground mt-6 mb-3">📅 Planos de Assinatura</h3>
+        <h3 className="font-display text-lg font-bold text-foreground mt-6 mb-3">📅 Planos de Assinatura Floral</h3>
         <div className="space-y-3">
           {subscriptions.map((s) => (
             <motion.div
@@ -140,4 +140,4 @@ const OvosCaipiraPage = () => {
   );
 };
 
-export default OvosCaipiraPage;
+export default ArranjosPage;

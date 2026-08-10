@@ -244,7 +244,7 @@ const Admin = () => {
   const getQuantityLabel = (unitType: string) => {
     switch (unitType) {
       case "kg": return "Peso (kg)";
-      case "cartela": return "Qtd. Cartelas (30 ovos)";
+      case "cartela": return "Qtd. Cestas";
       case "bandeja": return "Qtd. Bandejas";
       default: return "Quantidade (unidades)";
     }
@@ -822,9 +822,9 @@ const Admin = () => {
                 <Select value={prodCategoria} onValueChange={setProdCategoria}>
                   <SelectTrigger className="bg-secondary border-border"><SelectValue placeholder="Categoria" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Ovos Caipira">🥚 Ovos Caipira</SelectItem>
-                    <SelectItem value="Frango Caipira">🍗 Frango Caipira</SelectItem>
-                    <SelectItem value="Polpas">🍹 Polpas</SelectItem>
+                    <SelectItem value="Arranjos">💐 Arranjos</SelectItem>
+                    <SelectItem value="Buquês">🌹 Buquês</SelectItem>
+                    <SelectItem value="Presentes">🎁 Presentes</SelectItem>
                     <SelectItem value="Produtos da Roça">🌾 Produtos da Roça</SelectItem>
                     <SelectItem value="Carne Bovina">🥩 Carne Bovina</SelectItem>
                   </SelectContent>
@@ -835,7 +835,7 @@ const Admin = () => {
                     <SelectItem value="unidade">📦 Unidade</SelectItem>
                     <SelectItem value="kg">⚖️ Peso (kg)</SelectItem>
                     <SelectItem value="bandeja">🥚 Bandeja</SelectItem>
-                    <SelectItem value="cartela">🥚 Cartela (30 ovos)</SelectItem>
+                    <SelectItem value="cartela">🧺 Cesta</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -881,9 +881,9 @@ const Admin = () => {
                                 <Select value={editProd.categoria} onValueChange={(v) => setEditProd({ ...editProd, categoria: v })}>
                                   <SelectTrigger className="bg-secondary border-border text-sm"><SelectValue placeholder="Categoria" /></SelectTrigger>
                                   <SelectContent>
-                                    <SelectItem value="Ovos Caipira">🥚 Ovos Caipira</SelectItem>
-                                    <SelectItem value="Frango Caipira">🍗 Frango Caipira</SelectItem>
-                                    <SelectItem value="Polpas">🍹 Polpas</SelectItem>
+                                    <SelectItem value="Arranjos">💐 Arranjos</SelectItem>
+                                    <SelectItem value="Buquês">🌹 Buquês</SelectItem>
+                                    <SelectItem value="Presentes">🎁 Presentes</SelectItem>
                                     <SelectItem value="Produtos da Roça">🌾 Produtos da Roça</SelectItem>
                                     <SelectItem value="Carne Bovina">🥩 Carne Bovina</SelectItem>
                                   </SelectContent>
@@ -894,7 +894,7 @@ const Admin = () => {
                                     <SelectItem value="unidade">📦 Unidade</SelectItem>
                                     <SelectItem value="kg">⚖️ Peso (kg)</SelectItem>
                                     <SelectItem value="bandeja">🥚 Bandeja</SelectItem>
-                                    <SelectItem value="cartela">🥚 Cartela</SelectItem>
+                                    <SelectItem value="cartela">🧺 Cesta</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </div>
@@ -930,7 +930,7 @@ const Admin = () => {
                                   {p.preco_parceiro && <span className="text-primary">Parc: R$ {Number(p.preco_parceiro).toFixed(2)}</span>}
                                   <span>Est: {p.estoque}</span>
                                   <Badge variant="outline" className="text-[9px] px-1">
-                                    {p.unit_type === "kg" ? "kg" : p.unit_type === "cartela" ? "Cartela" : p.unit_type === "bandeja" ? "Bandeja" : "Un"}
+                                    {p.unit_type === "kg" ? "kg" : p.unit_type === "cartela" ? "Cesta" : p.unit_type === "bandeja" ? "Buquê" : "Un"}
                                   </Badge>
                                 </div>
                                 <div className="flex items-center gap-1.5 mt-1">

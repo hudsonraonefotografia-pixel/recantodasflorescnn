@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import { ScanLine, Truck, MapPin, Package, RefreshCw, PackageCheck } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import heroBanner from "@/assets/hero-banner.jpg";
-import ovosCaipira from "@/assets/ovos-caipira.jpg";
-import frangoCaipira from "@/assets/frango-caipira.jpg";
-import polpasFrutas from "@/assets/polpas-frutas.jpg";
+import arranjosImg from "@/assets/arranjos.jpg";
+import buquesImg from "@/assets/buques.jpg";
+import presentesImg from "@/assets/presentes.jpg";
 import produtosRoca from "@/assets/produtos-roca.jpg";
 
 import flowerBranch from "@/assets/flower_branch.png";
@@ -20,7 +20,7 @@ const Index = () => {
       {/* Ribbon Background */}
       <div className="ribbon-container top-40 -left-1/4 rotate-[-15deg] bg-primary opacity-10">
         <div className="ribbon-text text-primary-foreground">
-          RECANTO DAS FLORES • DIRETO DA GRANJA • RECANTO DAS FLORES • DIRETO DA NATUREZA • RECANTO DAS FLORES • 
+          RECANTO DAS FLORES • A ARTE DE PRESENTEAR • RECANTO DAS FLORES • EMOÇÕES EM FLORES • RECANTO DAS FLORES • 
         </div>
       </div>
       
@@ -37,20 +37,20 @@ const Index = () => {
         <main className="max-w-lg md:max-w-2xl lg:max-w-4xl xl:max-w-6xl mx-auto">
         {/* Hero Banner */}
         <div className="relative mx-3 mt-3 rounded-xl overflow-hidden">
-          <img src={heroBanner} alt="Produtos frescos da granja" className="w-full h-44 object-cover" />
+          <img src={heroBanner} alt="Arranjos frescos" className="w-full h-44 object-cover" />
           <div className="absolute inset-0 gradient-hero flex flex-col justify-end p-4">
             <p className="text-foreground text-xs opacity-80">Bom dia! 🌿</p>
             <p className="text-foreground text-sm font-semibold mb-1">
-              Seus ovos frescos já estão separados!
+              Seu arranjo de hoje já está pronto!
             </p>
             <div className="mt-1">
-              <p className="text-primary font-display font-bold text-sm">🌿 ASSINATURA Recanto das Flores</p>
+              <p className="text-primary font-display font-bold text-sm">💐 CLUBE Recanto das Flores</p>
               <p className="text-foreground text-xs">
-                Receba ovos toda semana e <span className="font-bold text-primary">ECONOMIZE ATÉ 12%</span>
+                Receba flores toda semana e <span className="font-bold text-primary">DECORE SUA CASA</span>
               </p>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/ovos-caipira")}
+                onClick={() => navigate("/arranjos")}
                 className="mt-2 gradient-gold text-primary-foreground text-xs font-bold px-5 py-1.5 rounded-full shadow-gold"
               >
                 Assinar agora
@@ -77,27 +77,27 @@ const Index = () => {
         {/* Product Categories */}
         <div className="px-3 mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
           <ProductCard
-            title="Ovos Caipira"
-            image={ovosCaipira}
-            items={["15 Unidades", "30 Unidades", "Combo Família"]}
-            to="/ovos-caipira"
+            title="Arranjos"
+            image={arranjosImg}
+            items={["Pequenos", "Médios", "Grandes"]}
+            to="/arranjos"
           />
           <ProductCard
-            title="Frango Caipira"
-            image={frangoCaipira}
-            items={["Inteiro", "Cortado", "Temperado Artesanal"]}
-            to="/frango"
+            title="Buquês"
+            image={buquesImg}
+            items={["Rosas", "Girassóis", "Mistos"]}
+            to="/buques"
           />
           <ProductCard
-            title="Polpas Naturais"
-            image={polpasFrutas}
-            items={["Umbu", "Cajá", "Acerola"]}
-            to="/polpas"
+            title="Presentes"
+            image={presentesImg}
+            items={["Cestas", "Chocolates", "Vinhos"]}
+            to="/presentes"
           />
           <ProductCard
-            title="Produtos da Roça"
+            title="Outros"
             image={produtosRoca}
-            items={["Mel", "Manteiga da Terra", "Queijo Artesanal"]}
+            items={["Vasos", "Adubos", "Cartões"]}
             to="/produtos"
           />
         </div>
@@ -116,40 +116,40 @@ const Index = () => {
           <MapPin size={22} className="text-primary flex-shrink-0" />
         </motion.div>
 
-        {/* Promo Savings - Combo Família */}
+        {/* Promo Savings - Combo Romântico */}
         <div className="mx-3 mt-4 mb-4 gradient-card border-2 border-primary rounded-xl overflow-hidden glow-gold">
           <div className="flex items-center gap-3 p-4">
             <div className="flex-1">
               <p className="text-foreground text-sm font-bold">
-                Você economiza mais de <span className="text-primary text-lg font-display">R$28</span>
+                Você economiza mais de <span className="text-primary text-lg font-display">R$30</span>
               </p>
-              <p className="text-muted-foreground text-xs mt-1">no Combo Família 🔥</p>
+              <p className="text-muted-foreground text-xs mt-1">no Combo Romântico ❤️</p>
               <div className="mt-2">
-                <p className="text-muted-foreground text-xs line-through">De R$ 125,80</p>
-                <p className="text-primary font-display text-xl font-bold">Por R$ 97,00</p>
+                <p className="text-muted-foreground text-xs line-through">De R$ 180,00</p>
+                <p className="text-primary font-display text-xl font-bold">Por R$ 150,00</p>
               </div>
               <p className="text-muted-foreground text-[10px] mt-1">
-                2x Cartela 30 ovos + Frango Inteiro Caipira
+                Buquê de Rosas + Caixa de Bombons Finos
               </p>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                onClick={() => navigate("/ovos-caipira")}
+                onClick={() => navigate("/buques")}
                 className="mt-2 gradient-gold text-primary-foreground text-xs font-bold px-5 py-1.5 rounded-full shadow-gold"
               >
                 Comprar Combo
               </motion.button>
             </div>
             <img
-              src={ovosCaipira}
-              alt="Combo Família"
+              src={buquesImg}
+              alt="Combo Romântico"
               className="w-28 h-24 object-cover rounded-lg"
             />
           </div>
           <div className="flex border-t border-border">
             {[
-              { Icon: PackageCheck, label: "Escolha quantidade" },
+              { Icon: PackageCheck, label: "Escolha as flores" },
               { Icon: Truck, label: "Entregar ou retirar" },
-              { Icon: RefreshCw, label: "Escolha a recorrência" },
+              { Icon: RefreshCw, label: "Agende a entrega" },
             ].map((step) => (
               <div key={step.label} className="flex-1 flex flex-col items-center py-2 border-r border-border last:border-r-0">
                 <step.Icon size={18} className="text-primary" />

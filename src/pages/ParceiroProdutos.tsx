@@ -43,7 +43,7 @@ const ParceiroProdutosPage = () => {
       id: p.id,
       name: p.nome,
       price,
-      variant: `${p.unit_type === "kg" ? "Por kg" : p.unit_type === "cartela" ? "Cartela 30 ovos" : p.unit_type === "bandeja" ? "Bandeja" : "Unidade"}`,
+      variant: `${p.unit_type === "kg" ? "Por kg" : p.unit_type === "cartela" ? "Cesta" : p.unit_type === "bandeja" ? "Buquê" : "Unidade"}`,
       category: p.categoria || "Outros",
     });
     toast.success("Adicionado ao carrinho! 🤝");
@@ -92,7 +92,7 @@ const ParceiroProdutosPage = () => {
                         <p className="text-foreground font-semibold text-sm truncate">{p.nome}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge variant="outline" className="text-[9px] px-1.5 py-0">
-                            {p.unit_type === "kg" ? "Por kg" : p.unit_type === "cartela" ? "Cartela" : p.unit_type === "bandeja" ? "Bandeja" : "Unidade"}
+                            {p.unit_type === "kg" ? "Por kg" : p.unit_type === "cartela" ? "Cesta" : p.unit_type === "bandeja" ? "Buquê" : "Unidade"}
                           </Badge>
                           {p.estoque > 0 && <span className="text-[10px] text-muted-foreground">Est: {p.estoque}</span>}
                         </div>

@@ -27,7 +27,7 @@ const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         >
           <img src={splashGif} alt="Recanto das Flores" className="w-64 h-64 object-contain" />
           <p className="mt-6 text-xl font-display text-gold-gradient tracking-wide">
-            Recanto das Flores – Direto da Granja
+            Recanto das Flores – A Arte de Presentear
           </p>
         </motion.div>
       )}
