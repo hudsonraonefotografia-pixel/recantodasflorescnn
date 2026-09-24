@@ -270,7 +270,21 @@ const Login = () => {
       return;
     }
 
-    // Check for pending admin request to submit
+    // Check if user has admin role FIRST (fastest path for already-promoted admins)
+    const { data: roleData } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", currentUser.id)
+      .eq("role", "admin");
+
+    if (roleData && roleData.length > 0) {
+      // User is an admin, go straight to admin panel
+      navigate("/admin");
+      setLoading(false);
+      return;
+    }
+
+    // Check for pending admin request to submit (for new requests)
     const pendingAdmin = localStorage.getItem("pending_admin_request");
     if (pendingAdmin) {
       try {
@@ -297,7 +311,7 @@ const Login = () => {
       }
     }
 
-    // Check if user has pending admin request
+    // Check if user has a pending admin request
     const { data: pendingReq } = await supabase
       .from("admin_requests")
       .select("status")
@@ -320,20 +334,9 @@ const Login = () => {
       }
     }
 
-    // Check if user has admin role
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", currentUser.id)
-      .eq("role", "admin");
-
-    if (!roleData || roleData.length === 0) {
-      toast.error("Acesso negado. Você não possui permissão de administrador.");
-      await supabase.auth.signOut();
-      setLoading(false);
-      return;
-    }
-    navigate("/admin");
+    // No role and no request — deny access
+    toast.error("Acesso negado. Você não possui permissão de administrador.");
+    await supabase.auth.signOut();
     setLoading(false);
   };
 
@@ -362,7 +365,8 @@ const Login = () => {
           initial={{ scale: 1.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-full max-w-sm object-contain mb-6 drop-shadow-xl"
+          className="w-56 max-w-sm object-contain mb-6 drop-shadow-xl rounded-full"
+          style={{ background: "transparent" }}
         />
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -439,7 +443,7 @@ const Login = () => {
         <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-white/90 hover:text-white text-sm font-semibold mb-4 w-full mx-auto drop-shadow-md">
           ← Voltar
         </button>
-        <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-full max-w-sm object-contain mb-4" />
+        <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-40 h-40 object-contain mb-4 rounded-full" style={{ background: "transparent" }} />
         <div className="flex items-center gap-2 mb-2">
           <Shield size={20} className="text-primary" />
           <h1 className="text-xl font-display text-gold-gradient">

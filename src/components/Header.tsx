@@ -14,8 +14,13 @@ const Header = () => {
         <div className="flex items-center gap-2">
           <NotificationsPanel />
           <ThemeToggle />
+          <img
+            src={logoRecantoDasFlores}
+            alt="Recanto das Flores"
+            className="h-8 w-auto object-contain mix-blend-multiply dark:mix-blend-screen"
+            style={{ filter: 'drop-shadow(0 0 0px transparent)' }}
+          />
         </div>
-        <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="h-8 w-auto" />
         <Link to="/carrinho" className="relative">
           <ShoppingCart size={22} className="text-foreground" />
           {itemCount > 0 && (
