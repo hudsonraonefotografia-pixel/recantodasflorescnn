@@ -365,7 +365,7 @@ const Login = () => {
           initial={{ scale: 1.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="w-56 max-w-sm object-contain mb-6 drop-shadow-xl rounded-full"
+          className="w-56 max-w-sm object-contain mb-6 drop-shadow-xl "
           style={{ background: "transparent" }}
         />
         <motion.div
@@ -414,7 +414,7 @@ const Login = () => {
           transition={{ duration: 0.5 }}
           className="gradient-card border border-border rounded-2xl p-8 max-w-sm w-full text-center space-y-4"
         >
-          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+          <div className="w-16 h-16  bg-primary/10 flex items-center justify-center mx-auto">
             <Shield size={32} className="text-primary" />
           </div>
           <h2 className="text-xl font-display text-gold-gradient">Solicitação Enviada!</h2>
@@ -443,7 +443,7 @@ const Login = () => {
         <button onClick={() => { setMode("select"); setAdminSubMode("login"); setEmail(""); setPassword(""); setAdminName(""); }} className="self-start text-white/90 hover:text-white text-sm font-semibold mb-4 w-full mx-auto drop-shadow-md">
           ← Voltar
         </button>
-        <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-40 h-40 object-contain mb-4 rounded-full" style={{ background: "transparent" }} />
+        <img src={logoRecantoDasFlores} alt="Recanto das Flores" className="w-40 h-40 object-contain mb-4" />
         <div className="flex items-center gap-2 mb-2">
           <Shield size={20} className="text-primary" />
           <h1 className="text-xl font-display text-gold-gradient">

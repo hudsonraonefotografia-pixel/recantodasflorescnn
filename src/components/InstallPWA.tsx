@@ -100,7 +100,7 @@ export function InstallPWA({ inline = false }: { inline?: boolean }) {
           <img
             src={logoRecantoDasFlores}
             alt="Recanto das Flores"
-            className="w-10 h-10 rounded-full object-contain"
+            className="w-10 h-10  object-contain"
             style={{ background: "transparent" }}
           />
           <div>

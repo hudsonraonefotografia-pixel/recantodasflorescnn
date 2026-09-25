@@ -17,7 +17,7 @@ const Header = () => {
           <img
             src={logoRecantoDasFlores}
             alt="Recanto das Flores"
-            className="h-8 w-auto object-contain mix-blend-multiply dark:mix-blend-screen"
+            className="h-8 w-auto object-contain"
             style={{ filter: 'drop-shadow(0 0 0px transparent)' }}
           />
         </div>
