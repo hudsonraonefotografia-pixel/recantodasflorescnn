@@ -1,13 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Package, QrCode, Coins, ShoppingCart, User } from "lucide-react";
+import { Home, Package, Video, Coins, Sparkles, User } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 
 const tabs = [
   { to: "/home", icon: Home, label: "Início" },
   { to: "/produtos", icon: Package, label: "Produtos" },
-  { to: "/escanear", icon: QrCode, label: "Escanear", highlight: true },
-  { to: "/cashback", icon: Coins, label: "Pontos" },
-  { to: "/carrinho", icon: ShoppingCart, label: "Carrinho", showBadge: true },
+  { to: "/momentos", icon: Video, label: "Momentos", highlight: true },
+  { to: "/assinaturas", icon: Sparkles, label: "Planos" },
   { to: "/conta", icon: User, label: "Conta" },
 ];
 

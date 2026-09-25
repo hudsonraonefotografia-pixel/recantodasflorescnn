@@ -17,13 +17,14 @@ import Produtos from "./pages/Produtos";
 import Cart from "./pages/Cart";
 import Payment from "./pages/Payment";
 import Cashback from "./pages/Cashback";
-import Scan from "./pages/Scan";
+import Momentos from "./pages/Momentos";
 import Entregas from "./pages/Entregas";
 import Conta from "./pages/Conta";
 import Admin from "./pages/Admin";
 import Historico from "./pages/Historico";
 import ParceiroProdutos from "./pages/ParceiroProdutos";
 import ResetPassword from "./pages/ResetPassword";
+import Assinaturas from "./pages/Assinaturas";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,11 +53,12 @@ const App = () => (
                 <Route path="/arranjos" element={<ProtectedRoute><Arranjos /></ProtectedRoute>} />
                 <Route path="/buques" element={<ProtectedRoute><Buques /></ProtectedRoute>} />
                 <Route path="/presentes" element={<ProtectedRoute><Presentes /></ProtectedRoute>} />
+                <Route path="/assinaturas" element={<ProtectedRoute><Assinaturas /></ProtectedRoute>} />
                 <Route path="/produtos" element={<ProtectedRoute><Produtos /></ProtectedRoute>} />
                 <Route path="/carrinho" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
                 <Route path="/pagamento" element={<ProtectedRoute><Payment /></ProtectedRoute>} />
                 <Route path="/cashback" element={<ProtectedRoute><Cashback /></ProtectedRoute>} />
-                <Route path="/escanear" element={<ProtectedRoute><Scan /></ProtectedRoute>} />
+                <Route path="/momentos" element={<ProtectedRoute><Momentos /></ProtectedRoute>} />
                 <Route path="/entregas" element={<ProtectedRoute><Entregas /></ProtectedRoute>} />
                 <Route path="/conta" element={<ProtectedRoute><Conta /></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />

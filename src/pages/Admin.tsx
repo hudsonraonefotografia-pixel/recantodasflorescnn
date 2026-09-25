@@ -13,6 +13,7 @@ import { Send, Users, User, Shield, ArrowLeft, Zap, Target, Plus, Package, Eye, 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { AdminSidebar, AdminSidebarToggle } from "@/components/AdminSidebar";
 
 interface UserProfile {
   user_id: string;
@@ -32,6 +33,7 @@ const Admin = () => {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [moreSubTab, setMoreSubTab] = useState("push");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [broadcast, setBroadcast] = useState(true);
@@ -519,6 +521,7 @@ const Admin = () => {
           <Shield size={20} className="text-primary" />
           <h1 className="font-display text-foreground text-lg">Painel Admin</h1>
           <div className="ml-auto flex items-center gap-2">
+            <AdminSidebarToggle onClick={() => setSidebarOpen(true)} hasOnline={false} />
             <div className="bg-secondary/80 rounded-full px-3 py-1 flex items-center gap-1.5">
               <Users size={14} className="text-primary" />
               <span className="text-xs font-bold text-foreground">{users.length}</span>
@@ -1309,6 +1312,7 @@ const Admin = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <AdminSidebar totalUsers={users.length} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </div>
   );
 };
