@@ -74,7 +74,7 @@ const PaymentPage = () => {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("create-payment", {
+      const { data, error } = await supabase.functions.invoke("mercadopago-checkout", {
         body: {
           items: items.map(i => ({ name: i.name, quantity: i.quantity, price: i.price, category: i.category || "Produtos da Roça" })),
           total: finalTotal,
