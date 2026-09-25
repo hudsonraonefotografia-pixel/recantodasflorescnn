@@ -9,8 +9,8 @@ import arranjosImg from "@/assets/arranjos.jpg";
 import buquesImg from "@/assets/buques.jpg";
 import presentesImg from "@/assets/presentes.jpg";
 import produtosRoca from "@/assets/produtos-roca.jpg";
-
 import flowerBranch from "@/assets/flower_branch.png";
+import { MomentosCarousel } from "@/components/MomentosCarousel";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -59,20 +59,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Scan Button */}
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate("/escanear")}
-          className="mx-3 mt-3 w-[calc(100%-1.5rem)] gradient-gold rounded-xl p-3 flex items-center gap-3 shadow-gold"
-        >
-          <div className="bg-primary-foreground/20 rounded-lg p-2">
-            <ScanLine size={28} className="text-primary-foreground" />
-          </div>
-          <div className="text-left">
-            <p className="text-primary-foreground font-display font-bold text-sm">Escanear Produto</p>
-            <p className="text-primary-foreground/80 text-xs">Pague no ponto de venda</p>
-          </div>
-        </motion.button>
+        {/* Momentos Carousel */}
+        <MomentosCarousel />
 
         {/* Product Categories */}
         <div className="px-3 mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
