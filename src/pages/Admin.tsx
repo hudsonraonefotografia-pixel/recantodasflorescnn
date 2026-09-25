@@ -14,6 +14,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { AdminSidebar, AdminSidebarToggle } from "@/components/AdminSidebar";
+import { AdminAssinantes } from "@/components/AdminAssinantes";
+import { AdminConcierge } from "@/components/AdminConcierge";
+import { AdminMomentos } from "@/components/AdminMomentos";
 
 interface UserProfile {
   user_id: string;
