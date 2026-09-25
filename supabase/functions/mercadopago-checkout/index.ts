@@ -25,7 +25,24 @@ serve(async (req) => {
     
     if (!user) throw new Error("User not authenticated");
 
-    const { items, total } = await req.json();
+    const reqBody = await req.json();
+    if (reqBody.action === "process") {
+      const ACCESS_TOKEN = Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN");
+      const response = await fetch("https://api.mercadopago.com/v1/payments", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Idempotency-Key": crypto.randomUUID()
+        },
+        body: JSON.stringify(reqBody.formData)
+      });
+      const data = await response.json();
+      return new Response(JSON.stringify(data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+    const { items, total } = reqBody;
     if (!items || !total) throw new Error("items and total are required");
 
     const ACCESS_TOKEN = Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN");
@@ -79,7 +96,7 @@ serve(async (req) => {
       status: "pending",
     });
 
-    return new Response(JSON.stringify({ url: preference.init_point }), {
+    return new Response(JSON.stringify({ url: preference.init_point, preferenceId: preference.id }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
