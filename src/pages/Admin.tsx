@@ -980,7 +980,7 @@ const Admin = () => {
           {/* MORE TAB */}
           <TabsContent value="more" className="space-y-4">
             <Tabs value={moreSubTab} onValueChange={setMoreSubTab}>
-              <TabsList className="w-full grid grid-cols-6 bg-secondary/50 mb-3">
+              <TabsList className="w-full flex overflow-x-auto hide-scrollbar bg-secondary/50 mb-3 gap-2 px-1 justify-start">
                 <TabsTrigger value="push" className="text-[9px]">📢 Push</TabsTrigger>
                 <TabsTrigger value="partners" className="text-[9px] relative">
                   🤝 Parceiros
@@ -1002,6 +1002,9 @@ const Admin = () => {
                 </TabsTrigger>
                 <TabsTrigger value="events" className="text-[9px]">⚡ Eventos</TabsTrigger>
                 <TabsTrigger value="missions" className="text-[9px]">🎯 Missões</TabsTrigger>
+                <TabsTrigger value="assinantes" className="text-[9px]">⭐ Assinantes</TabsTrigger>
+                <TabsTrigger value="concierge" className="text-[9px]">📅 Datas</TabsTrigger>
+                <TabsTrigger value="momentos" className="text-[9px]">📸 Momentos</TabsTrigger>
               </TabsList>
 
               {/* PUSH */}
@@ -1307,6 +1310,15 @@ const Admin = () => {
                     ))}
                   </div>
                 )}
+              </TabsContent>
+              <TabsContent value="assinantes">
+                <AdminAssinantes />
+              </TabsContent>
+              <TabsContent value="concierge">
+                <AdminConcierge />
+              </TabsContent>
+              <TabsContent value="momentos">
+                <AdminMomentos />
               </TabsContent>
             </Tabs>
           </TabsContent>
