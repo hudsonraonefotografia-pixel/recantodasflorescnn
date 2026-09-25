@@ -69,6 +69,8 @@ const Admin = () => {
   const [prodNome, setProdNome] = useState("");
   const [prodPreco, setProdPreco] = useState("");
   const [prodPrecoParceiro, setProdPrecoParceiro] = useState("");
+  const [prodImage, setProdImage] = useState<File | null>(null);
+  const [prodEmbalagem, setProdEmbalagem] = useState("");
   const [prodCategoria, setProdCategoria] = useState("");
   const [prodDescricao, setProdDescricao] = useState("");
   const [prodEstoque, setProdEstoque] = useState("");
@@ -256,12 +258,27 @@ const Admin = () => {
   };
 
   const handleCreateProduct = async () => {
+    if (!prodNome || !prodPreco) { toast.error("Nome e preco sao obrigatorios"); return; }
+    setSavingProduct(true);
+    let imageUrl = null;
+    if (prodImage) {
+      const fileExt = prodImage.name.split('.').pop();
+      const filePath = `${Date.now()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage.from("produtos").upload(filePath, prodImage);
+      if (!uploadError) {
+        const { data: urlData } = supabase.storage.from("produtos").getPublicUrl(filePath);
+        imageUrl = urlData.publicUrl;
+      }
+    }
+
     if (!prodNome || !prodPreco) { toast.error("Nome e preço são obrigatórios"); return; }
     setSavingProduct(true);
     try {
       const { error } = await supabase.from("produtos").insert({
         nome: prodNome, preco: parseFloat(prodPreco),
         preco_parceiro: prodPrecoParceiro ? parseFloat(prodPrecoParceiro) : null,
+        image_url: imageUrl,
+        embalagem_cores: prodEmbalagem,
         categoria: prodCategoria || null, descricao: prodDescricao || null,
         estoque: parseInt(prodEstoque) || 0, lote: prodLote || null,
         validade: prodValidade || null, unit_type: prodUnitType,
@@ -270,6 +287,7 @@ const Admin = () => {
       if (error) throw error;
       toast.success("Produto criado!");
       setProdNome(""); setProdPreco(""); setProdPrecoParceiro(""); setProdCategoria(""); setProdDescricao(""); setProdEstoque(""); setProdLote(""); setProdValidade(""); setProdUnitType("unidade"); setProdQuantidade(""); setProdVisivelCliente(true); setProdVisivelParceiro(true);
+      setProdImage(null); setProdEmbalagem("");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
     } catch (err: any) { toast.error(err.message); }
     finally { setSavingProduct(false); }
@@ -819,10 +837,11 @@ const Admin = () => {
                 <Package size={18} className="text-primary" /> Adicionar Produto
               </h2>
               <Input placeholder="Nome do produto *" value={prodNome} onChange={(e) => setProdNome(e.target.value)} className="bg-secondary border-border" />
-              <Textarea placeholder="Descrição" value={prodDescricao} onChange={(e) => setProdDescricao(e.target.value)} className="bg-secondary border-border min-h-[60px]" />
+              <div className="grid grid-cols-2 gap-2"><Input type="file" accept="image/*" onChange={(e) => setProdImage(e.target.files?.[0] || null)} className="bg-secondary border-border pt-2 text-xs" /><Input placeholder="Cores/Embalagem" value={prodEmbalagem} onChange={(e) => setProdEmbalagem(e.target.value)} className="bg-secondary border-border" /></div>
+                <Textarea placeholder="Descrição" value={prodDescricao} onChange={(e) => setProdDescricao(e.target.value)} className="bg-secondary border-border min-h-[60px]" />
               <div className="grid grid-cols-2 gap-2">
-                <Input type="number" placeholder="Preço cliente *" value={prodPreco} onChange={(e) => setProdPreco(e.target.value)} className="bg-secondary border-border" step="0.01" />
-                <Input type="number" placeholder="Preço parceiro" value={prodPrecoParceiro} onChange={(e) => setProdPrecoParceiro(e.target.value)} className="bg-secondary border-border" step="0.01" />
+                <Input type="number" placeholder="Preço (Cliente) *" value={prodPreco} onChange={(e) => setProdPreco(e.target.value)} className="bg-secondary border-border" step="0.01" />
+                <Input type="number" placeholder="Preço (Assinante)" value={prodPrecoParceiro} onChange={(e) => setProdPrecoParceiro(e.target.value)} className="bg-secondary border-border" step="0.01" />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <Select value={prodCategoria} onValueChange={setProdCategoria}>
@@ -857,7 +876,7 @@ const Admin = () => {
                 </div>
                 <div className="flex items-center gap-2 flex-1 p-2 rounded-lg bg-secondary/50 border border-border">
                   <Switch checked={prodVisivelParceiro} onCheckedChange={setProdVisivelParceiro} />
-                  <span className="text-xs text-foreground">Ativar no Parceiro</span>
+                  <span className="text-xs text-foreground">Ativar p/ Assinante</span>
                 </div>
               </div>
               <Button onClick={handleCreateProduct} disabled={savingProduct} className="w-full gradient-gold text-primary-foreground font-bold h-12 rounded-xl">
