@@ -62,14 +62,14 @@ export function InstallPWA({ inline = false }: { inline?: boolean }) {
   const InstallContent = (
     <>
       {showIOSInstruction ? (
-        <div className={`bg-background/50 p-3 rounded-lg text-sm flex flex-col gap-2 ${inline ? '' : 'mt-2'}`}>
-          <p className="font-medium text-foreground">Como instalar no iOS:</p>
+        <div className={`bg-background/50 p-3 rounded-xl text-xs flex flex-col gap-2 ${inline ? '' : 'mt-2'}`}>
+          <p className="font-bold text-foreground">Para instalar no iOS:</p>
           <ol className="list-decimal pl-5 text-muted-foreground space-y-1">
             <li className="flex items-center gap-1">
-              Toque no botão compartilhar <Share className="w-3 h-3 inline" />
+              Toque em Compartilhar <Share className="w-3 h-3 inline text-primary" />
             </li>
             <li className="flex items-center gap-1">
-              Selecione "Adicionar à Tela de Início" <PlusSquare className="w-3 h-3 inline" />
+              "Adicionar à Tela de Início" <PlusSquare className="w-3 h-3 inline text-primary" />
             </li>
           </ol>
         </div>
@@ -79,11 +79,11 @@ export function InstallPWA({ inline = false }: { inline?: boolean }) {
           className={
             inline
               ? "w-full h-12 border-2 border-white/20 text-white font-semibold text-sm rounded-xl flex items-center justify-center gap-2 hover:bg-white/10 transition-colors backdrop-blur-sm"
-              : "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-gold"
+              : "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs py-2 px-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-gold"
           }
         >
-          {inline ? <Smartphone size={18} /> : null}
-          {isIOS ? "Como Instalar o App" : "Instalar Aplicativo"}
+          {inline ? <Smartphone size={18} /> : <Download size={14} />}
+          {isIOS ? "Instalar no iOS" : "Instalar Aplicativo"}
         </button>
       )}
     </>
@@ -94,31 +94,29 @@ export function InstallPWA({ inline = false }: { inline?: boolean }) {
   }
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 bg-card border border-border shadow-warm rounded-xl p-4 z-50 flex flex-col gap-3 animate-in slide-in-from-bottom-5">
-      <div className="flex justify-between items-start">
-        <div className="flex items-center gap-3">
-          <img
-            src={logoRecantoDasFlores}
-            alt="Recanto das Flores"
-            className="w-10 h-10  object-contain"
-            style={{ background: "transparent" }}
-          />
-          <div>
-            <h3 className="font-semibold text-sm text-foreground">Recanto das Flores App</h3>
-            <p className="text-xs text-muted-foreground">
-              Instale para uma experiência completa 🌸
-            </p>
+    <div className="fixed bottom-24 right-4 z-[60] w-[calc(100vw-2rem)] max-w-[320px] bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl p-4 animate-in slide-in-from-bottom-10 fade-in duration-500">
+      <div className="flex items-start gap-3">
+        <img
+          src={logoRecantoDasFlores}
+          alt="App"
+          className="w-10 h-10 object-contain drop-shadow-md flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start">
+            <h3 className="font-display font-bold text-foreground text-sm truncate">Recanto das Flores App</h3>
+            <button 
+              onClick={() => setDismissed(true)}
+              className="text-muted-foreground hover:text-foreground transition-colors p-1 -mt-1 -mr-1"
+            >
+              <X size={16} />
+            </button>
           </div>
+          <p className="text-[11px] text-muted-foreground leading-tight mt-0.5 mb-3">
+            Instale para uma experiência mais rápida e completa 🌸
+          </p>
+          {InstallContent}
         </div>
-        <button 
-          onClick={() => setDismissed(true)}
-          className="text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </button>
       </div>
-
-      {InstallContent}
     </div>
   );
 }
