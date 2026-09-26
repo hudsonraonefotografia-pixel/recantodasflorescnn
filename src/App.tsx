@@ -7,6 +7,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { InstallPWA } from "@/components/InstallPWA";
+import UpdateAppButton from "@/components/UpdateAppButton";
 import { Analytics } from "@vercel/analytics/react";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -47,6 +48,7 @@ const App = () => (
             <Analytics />
             <BrowserRouter>
               <InstallPWA />
+            <UpdateAppButton />
               <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/home" element={<ProtectedRoute><Index /></ProtectedRoute>} />
