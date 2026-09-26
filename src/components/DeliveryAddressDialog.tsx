@@ -49,8 +49,8 @@ const DeliveryAddressDialog = ({ open, onClose, onConfirm }: DeliveryAddressDial
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({ endereco, cep, cidade, ponto_referencia: pontoReferencia })
-      .eq("user_id", user.id);
+      .upsert({ user_id: user.id, endereco, cep, cidade, ponto_referencia: pontoReferencia })
+      ;
     if (error) {
       toast.error("Erro ao salvar endereço.");
     } else {
