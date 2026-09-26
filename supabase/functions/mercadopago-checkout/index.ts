@@ -43,6 +43,7 @@ serve(async (req) => {
       });
     }
     const { items, total } = reqBody;
+    const purchaseId = crypto.randomUUID();
     if (!items || !total) throw new Error("items and total are required");
 
     const ACCESS_TOKEN = Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN");
@@ -64,7 +65,7 @@ serve(async (req) => {
         pending: `${req.headers.get("origin")}/home?payment=pending`
       },
       auto_return: "approved",
-      external_reference: user.id
+      external_reference: purchaseId
     };
 
     const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
@@ -89,6 +90,7 @@ serve(async (req) => {
     );
 
     await serviceClient.from("purchase_history").insert({
+      id: purchaseId,
       user_id: user.id,
       items: JSON.stringify(items),
       total,
