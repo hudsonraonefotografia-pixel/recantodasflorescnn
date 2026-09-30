@@ -209,8 +209,11 @@ const PaymentPage = () => {
       
       <DeliveryAddressDialog
         open={showDeliveryDialog}
-        onOpenChange={setShowDeliveryDialog}
-        onSuccess={() => setAddressConfirmed(true)}
+        onClose={() => setShowDeliveryDialog(false)}
+        onConfirm={() => {
+          setShowDeliveryDialog(false);
+          setAddressConfirmed(true);
+        }}
       />
       <BottomNav />
     </div>
