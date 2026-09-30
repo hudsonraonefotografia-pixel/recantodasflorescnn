@@ -190,7 +190,8 @@ const PaymentPage = () => {
                             clearCart();
                             navigate(`/home?payment=${data.status}`);
                           } else {
-                            toast.error("O pagamento não foi aprovado.");
+                            toast.error(`Erro: ${data.message || data.error || "Pagamento recusado"}`);
+                            console.error("MP Error:", data);
                           }
                         })
                         .catch((err) => {
