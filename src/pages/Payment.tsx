@@ -177,10 +177,10 @@ const PaymentPage = () => {
                 <Payment
                   initialization={{ amount: finalTotal, preferenceId }}
                   customization={customization as any}
-                  onSubmit={async (param) => {
+                  onSubmit={async (param: any) => {
                     return new Promise((resolve, reject) => {
                       supabase.functions.invoke("mercadopago-checkout", {
-                        body: { action: "process", formData: param }
+                        body: { action: "process", formData: param.formData || param }
                       })
                         .then(({ data, error }) => {
                           if (error) throw error;
