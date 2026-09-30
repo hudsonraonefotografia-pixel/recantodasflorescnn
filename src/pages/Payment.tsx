@@ -107,7 +107,7 @@ const PaymentPage = () => {
       style: {
         theme: "dark",
         customVariables: {
-          baseColor: "#E09B76"
+          formBackgroundColor: "transparent", baseColor: "#e91e63", textPrimaryColor: "#f6faf6", textSecondaryColor: "#8fa394", inputBackgroundColor: "#132f1f"
         }
       }
     }
