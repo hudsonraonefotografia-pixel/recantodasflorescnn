@@ -175,7 +175,7 @@ const PaymentPage = () => {
             {preferenceId && (
               <div className="mercado-pago-container bg-card rounded-xl overflow-hidden border border-border">
                 <Payment
-                  initialization={{ preferenceId }}
+                  initialization={{ amount: finalTotal, preferenceId }}
                   customization={customization as any}
                   onSubmit={async (param) => {
                     return new Promise((resolve, reject) => {
