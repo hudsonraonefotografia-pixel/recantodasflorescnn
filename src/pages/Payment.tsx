@@ -185,10 +185,12 @@ const PaymentPage = () => {
                         .then(({ data, error }) => {
                           if (error) throw error;
                           resolve(data);
-                          if (data.status === "approved" || data.status === "in_process" || data.status === "pending") {
-                            toast.success("Pagamento iniciado com sucesso!");
+                          if (data.status === "approved") {
+                            toast.success("Pagamento aprovado! 🎉");
                             clearCart();
-                            navigate(`/home?payment=${data.status}`);
+                            navigate("/home?payment=approved");
+                          } else if (data.status === "pending" || data.status === "in_process") {
+                            toast.success("PIX gerado! Copie o código abaixo para pagar.");
                           } else {
                             toast.error(`Erro: ${data.message || data.error || "Pagamento recusado"}`);
                             console.error("MP Error:", data);
