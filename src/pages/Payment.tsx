@@ -180,7 +180,7 @@ const PaymentPage = () => {
                   onSubmit={async (param: any) => {
                     return new Promise((resolve, reject) => {
                       supabase.functions.invoke("mercadopago-checkout", {
-                        body: { action: "process", formData: param.formData || param }
+                        body: { action: "process", formData: { ...(param.formData || param), transaction_amount: finalTotal, description: "Pedido Recanto das Flores" } }
                       })
                         .then(({ data, error }) => {
                           if (error) throw error;
