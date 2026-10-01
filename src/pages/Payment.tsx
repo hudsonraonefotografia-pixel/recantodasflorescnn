@@ -54,7 +54,7 @@ const PaymentPage = () => {
             }
           });
           if (error) throw error;
-          if (data?.preferenceId) {
+          if (!data?.preferenceId) { toast.error("MP Bloqueou Painel: " + JSON.stringify(data)); } if (data?.preferenceId) {
             setPreferenceId(data.preferenceId);
           }
         } catch (err) {
