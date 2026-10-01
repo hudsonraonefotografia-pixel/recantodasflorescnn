@@ -118,6 +118,15 @@ const AssinaturasPage = () => {
           <p className="text-muted-foreground text-sm">Escolha o plano ideal para você</p>
         </div>
 
+        <div className="bg-primary/10 border border-primary/30 rounded-xl p-4 mb-6 text-sm text-foreground shadow-sm">
+          <div className="flex gap-2">
+            <AlertTriangle size={18} className="text-primary flex-shrink-0 mt-0.5" />
+            <p className="text-muted-foreground">
+              <strong className="font-bold text-primary">Importante:</strong> O valor pago pela assinatura <strong>não é resgatável</strong> e não funciona como crediário ou saldo na loja. Ele serve exclusivamente como um benefício para manter os descontos e ofertas garantidas durante o período da sua assinatura.
+            </p>
+          </div>
+        </div>
+
         <div className="space-y-4">
           {plans.map((plan) => (
             <motion.div
