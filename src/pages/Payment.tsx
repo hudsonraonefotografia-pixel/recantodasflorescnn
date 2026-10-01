@@ -82,7 +82,7 @@ const PaymentPage = () => {
     return sum + (item.price * item.quantity * multiplier);
   }, 0);
 
-  if (items.length === 0) {
+  if (items.length === 0 && !pixData) {
     return (
       <div className="min-h-screen bg-background pb-20">
         <Header />
@@ -195,7 +195,7 @@ const PaymentPage = () => {
                                 qrCode: data.point_of_interaction.transaction_data.qr_code,
                                 qrCodeBase64: data.point_of_interaction.transaction_data.qr_code_base64
                               });
-                              clearCart();
+                              // clearCart();
                             }
                             toast.success("PIX gerado! Copie o código abaixo para pagar.");
                           } else {
@@ -237,7 +237,7 @@ const PaymentPage = () => {
           </button>
           
           <button 
-            onClick={() => navigate("/home?payment=pending")}
+            onClick={() => { clearCart(); navigate("/home?payment=pending"); }}
             className="w-full max-w-sm border border-primary text-primary font-semibold rounded-xl h-12"
           >
             Já paguei / Voltar ao Início
