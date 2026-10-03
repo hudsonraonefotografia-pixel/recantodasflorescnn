@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { AdminSidebar, AdminSidebarToggle } from "@/components/AdminSidebar";
+import { AdminOrders } from "@/components/AdminOrders";
 import { AdminAssinantes } from "@/components/AdminAssinantes";
 import { AdminConcierge } from "@/components/AdminConcierge";
 import { AdminMomentos } from "@/components/AdminMomentos";
@@ -553,9 +554,10 @@ const Admin = () => {
 
       <div className="max-w-lg md:max-w-2xl lg:max-w-4xl mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); if (v === "users") handleMarkUsersViewed(); }}>
-          <TabsList className="w-full grid grid-cols-4 bg-secondary/50 mb-2">
+          <TabsList className="w-full grid grid-cols-5 bg-secondary/50 mb-2">
             <TabsTrigger value="dashboard" className="text-[10px]">📊 Painel</TabsTrigger>
-            <TabsTrigger value="users" className="text-[10px] relative">
+            <TabsTrigger value="orders" className="text-[10px]">🛒 Pedidos</TabsTrigger>
+              <TabsTrigger value="users" className="text-[10px] relative">
               👥 Usuários
               {newUserCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold">{newUserCount}</span>

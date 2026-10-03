@@ -49,6 +49,17 @@ const Historico = () => {
     navigate("/carrinho");
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "pending": return { text: "Aguardando Pagamento", color: "bg-orange-500/20 text-orange-400" };
+      case "approved": return { text: "Preparando Pedido", color: "bg-blue-500/20 text-blue-400" };
+      case "processing": return { text: "Produzindo", color: "bg-yellow-500/20 text-yellow-500" };
+      case "shipping": return { text: "A Caminho", color: "bg-purple-500/20 text-purple-400" };
+      case "delivered": return { text: "Entregue", color: "bg-green-500/20 text-green-400" };
+      default: return { text: status, color: "bg-gray-500/20 text-gray-400" };
+    }
+  };
+
   const methodLabel = (m: string) => {
     if (m === "pix") return "Pix";
     if (m === "cartao") return "Cartão";
