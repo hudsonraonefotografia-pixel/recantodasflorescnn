@@ -26,7 +26,7 @@ export function AdminOrders() {
   const fetchOrders = async () => {
     const { data, error } = await supabase
       .from("purchase_history")
-      .select("*, profiles(display_name, endereco, telefone, cidade, cep)")
+      .select("*, profiles(*)")
       .order("created_at", { ascending: false });
 
     if (error) {

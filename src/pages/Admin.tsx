@@ -120,7 +120,7 @@ const Admin = () => {
   const { data: users = [] } = useQuery<UserProfile[]>({
     queryKey: ["admin-users"],
     queryFn: async () => {
-      const { data } = await supabase.from("profiles").select("user_id, display_name, user_type, created_at, endereco, cidade, cep, ponto_referencia, whatsapp");
+      const { data } = await supabase.from("profiles").select("*");
       return (data || []) as UserProfile[];
     },
   });

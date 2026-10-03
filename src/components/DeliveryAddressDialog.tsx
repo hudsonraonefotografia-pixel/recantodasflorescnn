@@ -26,7 +26,7 @@ const DeliveryAddressDialog = ({ open, onClose, onConfirm }: DeliveryAddressDial
     if (!user || loaded) return;
     supabase
       .from("profiles")
-      .select("endereco, cep, cidade, ponto_referencia")
+      .select("*")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
