@@ -463,6 +463,15 @@ const ContaPage = () => {
             )}
           </div>
 
+          <Link
+            to="/historico"
+            className="w-full gradient-card border-warm rounded-xl p-4 flex items-center gap-3 text-foreground hover:border-primary/30 transition-colors"
+          >
+            <Package size={20} className="text-primary" />
+            <span className="font-semibold text-sm flex-1 text-left">Meus Pedidos</span>
+            <ChevronRight size={16} className="text-muted-foreground" />
+          </Link>
+
           <button
             onClick={() => {
               setNewName(profile?.display_name || "");

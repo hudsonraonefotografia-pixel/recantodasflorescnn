@@ -29,11 +29,21 @@ const Historico = () => {
       const { data, error } = await supabase
         .from("purchase_history")
         .select("*")
+        .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data;
+      return (data || []).map((p: any) => {
+        let items = p.items;
+        try {
+          while (typeof items === "string") items = JSON.parse(items);
+        } catch {
+          items = [];
+        }
+        return { ...p, items: Array.isArray(items) ? items : [] };
+      });
     },
     enabled: !!user,
+    refetchInterval: 15000,
   });
 
   const handleBuyAgain = (items: PurchaseItem[]) => {

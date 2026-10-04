@@ -26,14 +26,28 @@ export function AdminOrders() {
   const fetchOrders = async () => {
     const { data, error } = await supabase
       .from("purchase_history")
-      .select("*, profiles(*)")
+      .select("*")
       .order("created_at", { ascending: false });
 
     if (error) {
-      toast.error("Erro ao buscar pedidos");
-    } else {
-      setOrders(data || []);
+      toast.error("Erro ao buscar pedidos: " + error.message);
+      setLoading(false);
+      return;
     }
+
+    const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
+    const list = (data || []).filter(
+      (o: any) => o.status !== "pending" || new Date(o.created_at).getTime() > dayAgo
+    );
+
+    const userIds = [...new Set(list.map((o: any) => o.user_id).filter(Boolean))];
+    let profilesMap: Record<string, any> = {};
+    if (userIds.length > 0) {
+      const { data: profs } = await supabase.from("profiles").select("*").in("user_id", userIds);
+      (profs || []).forEach((p: any) => { profilesMap[p.user_id] = p; });
+    }
+
+    setOrders(list.map((o: any) => ({ ...o, profiles: profilesMap[o.user_id] || null })));
     setLoading(false);
   };
 
@@ -74,9 +88,11 @@ export function AdminOrders() {
     }
   };
 
-  const formatItems = (itemsJson: string) => {
+  const formatItems = (raw: any) => {
     try {
-      const items = JSON.parse(itemsJson);
+      let items = raw;
+      while (typeof items === "string") items = JSON.parse(items);
+      if (!Array.isArray(items)) return "Itens desconhecidos";
       return items.map((i: any) => `${i.quantity}x ${i.name}`).join(", ");
     } catch {
       return "Itens desconhecidos";
