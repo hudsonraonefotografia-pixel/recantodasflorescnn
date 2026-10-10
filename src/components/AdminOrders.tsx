@@ -211,7 +211,7 @@ export function AdminOrders() {
                         : "bg-secondary text-foreground hover:bg-blue-500/20 hover:text-blue-400"
                     }`}
                   >
-                    1. Recebido
+                    1. Confirmar Pago / Recebido
                   </button>
                   <button
                     onClick={() => updateStatus(order.id, "processing")}
