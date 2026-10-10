@@ -484,11 +484,13 @@ const Admin = () => {
   const totalClientes = users.filter(u => u.user_type === "cliente").length;
   const totalParceiros = partnerRequests.filter((r: any) => r.status === "aprovado").length;
   const pendingRequests = partnerRequests.filter((r: any) => r.status === "pendente").length;
-  const today = new Date().toISOString().split("T")[0];
-  const ordersToday = purchaseHistory.filter((p: any) => p.created_at?.startsWith(today)).length;
+    const today = new Date().toISOString().split("T")[0];
+  const completedPurchases = purchaseHistory.filter((p: any) => p.status !== "pending" && p.status !== "cancelled" && p.status !== "rejected");
+  const ordersToday = completedPurchases.filter((p: any) => p.created_at?.startsWith(today)).length;
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const ordersMonth = purchaseHistory.filter((p: any) => p.created_at?.startsWith(currentMonth)).length;
-  const totalSalesVolume = purchaseHistory.reduce((sum: number, p: any) => sum + Number(p.total || 0), 0);
+  const ordersMonth = completedPurchases.filter((p: any) => p.created_at?.startsWith(currentMonth)).length;
+  const totalSalesVolume = completedPurchases.reduce((sum: number, p: any) => sum + Number(p.total || 0), 0);
+  const pendingAttemptsCount = purchaseHistory.filter((p: any) => p.status === "pending").length;
   const salesByDay = (() => {
     const last7 = [];
     for (let i = 6; i >= 0; i--) {
@@ -496,7 +498,7 @@ const Admin = () => {
       d.setDate(d.getDate() - i);
       const key = d.toISOString().split("T")[0];
       const label = d.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit" });
-      const dayOrders = purchaseHistory.filter((p: any) => p.created_at?.startsWith(key));
+      const dayOrders = completedPurchases.filter((p: any) => p.created_at?.startsWith(key));
       const total = dayOrders.reduce((s: number, p: any) => s + Number(p.total || 0), 0);
       last7.push({ name: label, vendas: total, pedidos: dayOrders.length });
     }
@@ -581,9 +583,9 @@ const Admin = () => {
               <p className="text-sm font-bold text-foreground">{totalParceiros}</p>
               <p className="text-[8px] text-muted-foreground leading-tight">Parceiros</p>
             </button>
-            <button onClick={() => navigateTo("dashboard")} className="bg-secondary/60 border border-border rounded-lg p-2 text-center hover:bg-secondary transition-colors">
-              <p className="text-sm font-bold text-foreground">{purchaseHistory.length}</p>
-              <p className="text-[8px] text-muted-foreground leading-tight">Pedidos</p>
+            <button onClick={() => navigateTo("orders")} className="bg-secondary/60 border border-border rounded-lg p-2 text-center hover:bg-secondary transition-colors">
+              <p className="text-sm font-bold text-foreground">{completedPurchases.length}</p>
+              <p className="text-[8px] text-muted-foreground leading-tight">Vendas Pagas</p>
             </button>
             <button onClick={() => navigateTo("dashboard")} className="bg-secondary/60 border border-border rounded-lg p-2 text-center hover:bg-secondary transition-colors">
               <p className="text-sm font-bold text-foreground">{ordersToday}</p>
@@ -617,25 +619,25 @@ const Admin = () => {
                 <p className="text-2xl font-bold text-foreground">{totalParceiros}</p>
                 <p className="text-[10px] text-muted-foreground">Parceiros Aprovados</p>
               </button>
-              <button onClick={() => navigateTo("dashboard")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
+              <button onClick={() => navigateTo("orders")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
                 <ShoppingCart size={20} className="text-primary mx-auto mb-1" />
-                <p className="text-2xl font-bold text-foreground">{purchaseHistory.length}</p>
-                <p className="text-[10px] text-muted-foreground">Pedidos Totais</p>
+                <p className="text-2xl font-bold text-foreground">{completedPurchases.length}</p>
+                <p className="text-[10px] text-muted-foreground">Vendas Concluídas ({pendingAttemptsCount} tentativas pendentes)</p>
               </button>
-              <button onClick={() => navigateTo("dashboard")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
+              <button onClick={() => navigateTo("orders")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
                 <BarChart3 size={20} className="text-primary mx-auto mb-1" />
                 <p className="text-2xl font-bold text-foreground">{ordersToday}</p>
-                <p className="text-[10px] text-muted-foreground">Pedidos Hoje</p>
+                <p className="text-[10px] text-muted-foreground">Vendas Hoje</p>
               </button>
-              <button onClick={() => navigateTo("dashboard")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
+              <button onClick={() => navigateTo("orders")} className="gradient-card border border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
                 <BarChart3 size={20} className="text-primary mx-auto mb-1" />
                 <p className="text-2xl font-bold text-foreground">{ordersMonth}</p>
-                <p className="text-[10px] text-muted-foreground">Pedidos do Mês</p>
+                <p className="text-[10px] text-muted-foreground">Vendas do Mês</p>
               </button>
-              <button onClick={() => navigateTo("dashboard")} className="gradient-card border border-border rounded-xl p-4 text-center col-span-2 hover:border-primary/50 transition-colors">
+              <button onClick={() => navigateTo("orders")} className="gradient-card border border-border rounded-xl p-4 text-center col-span-2 hover:border-primary/50 transition-colors">
                 <DollarSign size={20} className="text-primary mx-auto mb-1" />
                 <p className="text-2xl font-bold text-foreground">R$ {totalSalesVolume.toFixed(2)}</p>
-                <p className="text-[10px] text-muted-foreground">Volume Total de Vendas</p>
+                <p className="text-[10px] text-muted-foreground">Volume Total de Vendas Concluídas</p>
               </button>
             </div>
 
@@ -679,6 +681,11 @@ const Admin = () => {
                 </div>
               </button>
             )}
+          </TabsContent>
+
+          {/* ORDERS TAB */}
+          <TabsContent value="orders" className="space-y-4">
+            <AdminOrders />
           </TabsContent>
 
           {/* USERS TAB */}
