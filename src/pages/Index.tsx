@@ -11,6 +11,7 @@ import presentesImg from "@/assets/presentes.jpg";
 import produtosRoca from "@/assets/produtos-roca.jpg";
 import flowerBranch from "@/assets/flower_branch.png";
 import { MomentosCarousel } from "@/components/MomentosCarousel";
+import { OrderTrackerBanner } from "@/components/OrderTrackerBanner";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -58,6 +59,9 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* Caixa Temporária de Rastreamento de Pedido Ativo */}
+        <OrderTrackerBanner />
 
         {/* Momentos Carousel */}
         <MomentosCarousel />
