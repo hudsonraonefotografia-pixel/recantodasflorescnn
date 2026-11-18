@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { title, message, user_id, broadcast } = await req.json();
+    const { title, message, user_id, broadcast, url } = await req.json();
 
     if (!title || !message) {
       return new Response(
@@ -107,7 +107,13 @@ Deno.serve(async (req) => {
         title,
         message,
       }));
-      await supabaseAdmin.from("notifications").insert(notificationRows);
+      const { error: insertError } = await supabaseAdmin.from("notifications").insert(notificationRows);
+      if (insertError) {
+        return new Response(
+          JSON.stringify({ error: "Falha ao salvar notificação: " + insertError.message }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     // Send push notifications
@@ -133,9 +139,8 @@ Deno.serve(async (req) => {
             privateJWK,
             subscription,
             message: {
-              payload: JSON.stringify({ title, body: message }),
-            },
-            adminContact: "mailto:contato@Recanto das Flores.com",
+              payload: JSON.stringify({ title, body: message, url: url || "/home" }),            },
+            adminContact: "mailto:contato@recantodasflores.com",
           });
 
           const pushResponse = await fetch(endpoint, { method: "POST", headers, body });

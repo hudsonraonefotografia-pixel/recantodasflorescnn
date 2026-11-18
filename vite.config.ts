@@ -18,6 +18,10 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
+      workbox: {
+        // Inclui os handlers de push no service worker gerado (sw.js)
+        importScripts: ["/push-sw.js"],
+      },
       devOptions: {
         enabled: true,
       },

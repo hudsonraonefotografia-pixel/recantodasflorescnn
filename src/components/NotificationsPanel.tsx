@@ -36,6 +36,36 @@ const NotificationsPanel = () => {
     if (open && user) fetchNotifications();
   }, [open, user]);
 
+  // Mantém o contador do sino atualizado e mostra novas notificações na hora
+  useEffect(() => {
+    if (!user) return;
+    fetchNotifications();
+
+    const channel = supabase
+      .channel(`notifications_${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          const n = payload.new as Notification;
+          setNotifications((prev) => (prev.some((p) => p.id === n.id) ? prev : [n, ...prev].slice(0, 20)));
+          toast(n.title, { description: n.message });
+        }
+      )
+      .subscribe();
+
+    // Fallback caso o realtime caia: recarrega ao voltar para o app e a cada 60s
+    const onFocus = () => fetchNotifications();
+    window.addEventListener("focus", onFocus);
+    const interval = setInterval(fetchNotifications, 60000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      window.removeEventListener("focus", onFocus);
+      clearInterval(interval);
+    };
+  }, [user?.id]);
+
   const markAsRead = async (id: string) => {
     await supabase.from("notifications").update({ read: true }).eq("id", id);
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));

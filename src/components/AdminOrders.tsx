@@ -4,6 +4,20 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { Check, Clock, Package, Truck, Info, RefreshCw } from "lucide-react";
 
+const STEPS = [
+  { status: "approved", label: "1. Confirmar Pago / Recebido", active: "bg-blue-500 text-white shadow-md shadow-blue-500/20", hover: "hover:bg-blue-500/20 hover:text-blue-400" },
+  { status: "processing", label: "2. Produzindo", active: "bg-yellow-500 text-black shadow-md shadow-yellow-500/20", hover: "hover:bg-yellow-500/20 hover:text-yellow-400" },
+  { status: "shipping", label: "3. A Caminho", active: "bg-purple-500 text-white shadow-md shadow-purple-500/20", hover: "hover:bg-purple-500/20 hover:text-purple-400" },
+  { status: "delivered", label: "4. Entregue", active: "bg-green-500 text-white shadow-md shadow-green-500/20", hover: "hover:bg-green-500/20 hover:text-green-400" },
+];
+
+const STATUS_NOTIFICATIONS: Record<string, { title: string; message: string }> = {
+  approved: { title: "✅ Pagamento confirmado!", message: "Recebemos seu pagamento. Seu pedido já está na fila do Recanto das Flores." },
+  processing: { title: "🌸 Seu pedido está sendo produzido", message: "Estamos preparando seu pedido com todo carinho." },
+  shipping: { title: "🚚 Seu pedido está a caminho!", message: "Seu pedido saiu para entrega e logo chega até você." },
+  delivered: { title: "🎉 Pedido entregue!", message: "Seu pedido foi entregue. Obrigado por comprar no Recanto das Flores!" },
+};
+
 export function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +66,9 @@ export function AdminOrders() {
     setLoading(false);
   };
 
-  const updateStatus = async (id: string, newStatus: string) => {
+  const updateStatus = async (order: any, newStatus: string) => {
+    if (order.status === newStatus) return;
+    const id = order.id;
     toast.loading("Atualizando status...", { id: "status-update" });
     const { error } = await supabase
       .from("purchase_history")
@@ -60,10 +76,34 @@ export function AdminOrders() {
       .eq("id", id);
 
     if (error) {
-      toast.error("Erro ao atualizar status", { id: "status-update" });
+      toast.error("Erro ao atualizar status: " + error.message, { id: "status-update" });
+      return;
+    }
+
+    setOrders((prev) => prev.map((o) => (o.id === id ? { ...o, status: newStatus } : o)));
+
+    const notif = STATUS_NOTIFICATIONS[newStatus];
+    if (!order.user_id || !notif) {
+      toast.success("Status atualizado (pedido sem cliente vinculado, sem notificação).", { id: "status-update" });
+      return;
+    }
+
+    // Grava a notificação no app do cliente e envia o push para a barra de notificações
+    const { data, error: pushError } = await supabase.functions.invoke("send-push", {
+      body: { user_id: order.user_id, title: notif.title, message: notif.message, url: "/historico" },
+    });
+
+    if (pushError || data?.error) {
+      toast.error("Status atualizado, mas falhou ao notificar o cliente: " + (data?.error || pushError?.message), {
+        id: "status-update",
+      });
+    } else if (data?.sent > 0) {
+      toast.success(`Status atualizado e cliente notificado (${data.sent} dispositivo(s)).`, { id: "status-update" });
     } else {
-      toast.success("Status atualizado com sucesso!", { id: "status-update" });
-      setOrders(orders.map((o) => (o.id === id ? { ...o, status: newStatus } : o)));
+      toast.success(
+        "Status atualizado e notificação salva no app. O cliente não ativou o push no celular, então não aparece na barra.",
+        { id: "status-update", duration: 6000 }
+      );
     }
   };
 
@@ -203,46 +243,25 @@ export function AdminOrders() {
               <div className="border-t border-border pt-3">
                 <p className="text-xs font-semibold text-foreground mb-2">Avançar Etapa do Pedido:</p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <button
-                    onClick={() => updateStatus(order.id, "approved")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all ${
-                      order.status === "approved"
-                        ? "bg-blue-500 text-white shadow-md shadow-blue-500/20"
-                        : "bg-secondary text-foreground hover:bg-blue-500/20 hover:text-blue-400"
-                    }`}
-                  >
-                    1. Confirmar Pago / Recebido
-                  </button>
-                  <button
-                    onClick={() => updateStatus(order.id, "processing")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all ${
-                      order.status === "processing"
-                        ? "bg-yellow-500 text-black shadow-md shadow-yellow-500/20"
-                        : "bg-secondary text-foreground hover:bg-yellow-500/20 hover:text-yellow-400"
-                    }`}
-                  >
-                    2. Produzindo
-                  </button>
-                  <button
-                    onClick={() => updateStatus(order.id, "shipping")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all ${
-                      order.status === "shipping"
-                        ? "bg-purple-500 text-white shadow-md shadow-purple-500/20"
-                        : "bg-secondary text-foreground hover:bg-purple-500/20 hover:text-purple-400"
-                    }`}
-                  >
-                    3. A Caminho
-                  </button>
-                  <button
-                    onClick={() => updateStatus(order.id, "delivered")}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold transition-all ${
-                      order.status === "delivered"
-                        ? "bg-green-500 text-white shadow-md shadow-green-500/20"
-                        : "bg-secondary text-foreground hover:bg-green-500/20 hover:text-green-400"
-                    }`}
-                  >
-                    4. Entregue
-                  </button>
+                  {(() => {
+                    const currentStep = STEPS.findIndex((s) => s.status === order.status);
+                    return STEPS.map((step, idx) => {
+                      // Etapas são cumulativas: a atual e todas as anteriores ficam marcadas
+                      const done = currentStep >= 0 && idx <= currentStep;
+                      return (
+                        <button
+                          key={step.status}
+                          onClick={() => updateStatus(order, step.status)}
+                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1 ${
+                            done ? step.active : `bg-secondary text-foreground ${step.hover}`
+                          } ${idx === currentStep ? "ring-2 ring-white/40" : ""}`}
+                        >
+                          {done && <Check size={12} />}
+                          {step.label}
+                        </button>
+                      );
+                    });
+                  })()}
                 </div>
               </div>
             </div>
