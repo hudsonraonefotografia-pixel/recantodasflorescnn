@@ -1,4 +1,4 @@
-project_id = "ouazdydnmpsefwuaagla"
+project_id = "szfwbhgfidhgzrwnmaqs"
 
 [functions.generate-vapid-keys]
 verify_jwt = false
