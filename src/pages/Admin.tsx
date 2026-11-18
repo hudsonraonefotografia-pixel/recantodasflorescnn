@@ -18,6 +18,7 @@ import { AdminOrders } from "@/components/AdminOrders";
 import { AdminAssinantes } from "@/components/AdminAssinantes";
 import { AdminConcierge } from "@/components/AdminConcierge";
 import { AdminMomentos } from "@/components/AdminMomentos";
+import { uploadProductImage, removeProductImage } from "@/lib/uploadProductImage";
 
 interface UserProfile {
   user_id: string;
@@ -86,6 +87,7 @@ const Admin = () => {
   // Edit product
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [editProd, setEditProd] = useState<any>({});
+  const [editProdImage, setEditProdImage] = useState<File | null>(null);
 
   // Partner requests filter
   const [partnerFilter, setPartnerFilter] = useState("pendente");
@@ -259,22 +261,12 @@ const Admin = () => {
   };
 
   const handleCreateProduct = async () => {
-    if (!prodNome || !prodPreco) { toast.error("Nome e preco sao obrigatorios"); return; }
-    setSavingProduct(true);
-    let imageUrl = null;
-    if (prodImage) {
-      const fileExt = prodImage.name.split('.').pop();
-      const filePath = `${Date.now()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from("produtos").upload(filePath, prodImage);
-      if (!uploadError) {
-        const { data: urlData } = supabase.storage.from("produtos").getPublicUrl(filePath);
-        imageUrl = urlData.publicUrl;
-      }
-    }
-
     if (!prodNome || !prodPreco) { toast.error("Nome e preço são obrigatórios"); return; }
     setSavingProduct(true);
     try {
+      let imageUrl: string | null = null;
+      if (prodImage) imageUrl = await uploadProductImage(prodImage);
+
       const { error } = await supabase.from("produtos").insert({
         nome: prodNome, preco: parseFloat(prodPreco),
         preco_parceiro: prodPrecoParceiro ? parseFloat(prodPrecoParceiro) : null,
@@ -303,12 +295,26 @@ const Admin = () => {
       unit_type: p.unit_type || "unidade",
       visivel_cliente: p.visivel_cliente !== false,
       visivel_parceiro: p.visivel_parceiro !== false,
+      image_url: p.image_url || null,
     });
+    setEditProdImage(null);
   };
 
   const handleSaveEdit = async () => {
     if (!editingProduct) return;
+    let imageUrl: string | null = editProd.image_url || null;
+    if (editProdImage) {
+      try {
+        toast.loading("Enviando foto...", { id: "edit-img" });
+        imageUrl = await uploadProductImage(editProdImage);
+        toast.dismiss("edit-img");
+      } catch (err: any) {
+        toast.error(err.message, { id: "edit-img" });
+        return;
+      }
+    }
     const { error } = await supabase.from("produtos").update({
+      image_url: imageUrl,
       nome: editProd.nome, preco: parseFloat(editProd.preco),
       preco_parceiro: editProd.preco_parceiro ? parseFloat(editProd.preco_parceiro) : null,
       categoria: editProd.categoria || null, descricao: editProd.descricao || null,
@@ -317,14 +323,21 @@ const Admin = () => {
       visivel_cliente: editProd.visivel_cliente, visivel_parceiro: editProd.visivel_parceiro,
     }).eq("id", editingProduct.id);
     if (error) { toast.error(error.message); return; }
+    // Apaga a foto antiga do Storage se ela foi trocada ou removida
+    if (editingProduct.image_url && editingProduct.image_url !== imageUrl) {
+      removeProductImage(editingProduct.image_url).catch(() => {});
+    }
     toast.success("Produto atualizado!");
     setEditingProduct(null);
+    setEditProdImage(null);
     queryClient.invalidateQueries({ queryKey: ["admin-products"] });
   };
 
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Deseja realmente remover este produto?")) return;
+    const imageUrl = (products as any[]).find((p: any) => p.id === id)?.image_url;
     const { error } = await supabase.from("produtos").delete().eq("id", id);
+    if (!error) removeProductImage(imageUrl).catch(() => {});
     if (error) toast.error(error.message);
     else { toast.success("Produto removido"); queryClient.invalidateQueries({ queryKey: ["admin-products"] }); }
   };
@@ -907,6 +920,29 @@ const Admin = () => {
                             <div className="space-y-2">
                               <Input value={editProd.nome} onChange={(e) => setEditProd({ ...editProd, nome: e.target.value })} className="bg-secondary border-border text-sm" />
                               <Textarea value={editProd.descricao} onChange={(e) => setEditProd({ ...editProd, descricao: e.target.value })} className="bg-secondary border-border text-sm min-h-[40px]" />
+                              <div className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50 border border-border">
+                                {editProdImage || editProd.image_url ? (
+                                  <img
+                                    src={editProdImage ? URL.createObjectURL(editProdImage) : editProd.image_url}
+                                    alt="Foto do produto"
+                                    className="w-16 h-16 rounded-lg object-cover border border-border shrink-0"
+                                  />
+                                ) : (
+                                  <div className="w-16 h-16 rounded-lg bg-secondary border border-dashed border-border flex items-center justify-center text-[10px] text-muted-foreground shrink-0">Sem foto</div>
+                                )}
+                                <div className="flex-1 min-w-0 space-y-1">
+                                  <Input type="file" accept="image/*" onChange={(e) => setEditProdImage(e.target.files?.[0] || null)} className="bg-secondary border-border pt-2 text-xs" />
+                                  {(editProdImage || editProd.image_url) && (
+                                    <button
+                                      type="button"
+                                      onClick={() => { setEditProdImage(null); setEditProd({ ...editProd, image_url: null }); }}
+                                      className="text-[10px] text-destructive hover:underline"
+                                    >
+                                      Remover foto
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
                               <div className="grid grid-cols-2 gap-2">
                                 <Input type="number" value={editProd.preco} onChange={(e) => setEditProd({ ...editProd, preco: e.target.value })} className="bg-secondary border-border text-sm" placeholder="Preço" step="0.01" />
                                 <Input type="number" value={editProd.preco_parceiro} onChange={(e) => setEditProd({ ...editProd, preco_parceiro: e.target.value })} className="bg-secondary border-border text-sm" placeholder="Preço parceiro" step="0.01" />
@@ -955,7 +991,12 @@ const Admin = () => {
                               </div>
                             </div>
                           ) : (
-                            <div className="flex items-center justify-between">
+                            <div className="flex items-center justify-between gap-3">
+                              {p.image_url ? (
+                                <img src={p.image_url} alt={p.nome} loading="lazy" className="w-12 h-12 rounded-lg object-cover border border-border shrink-0" />
+                              ) : (
+                                <div className="w-12 h-12 rounded-lg bg-secondary border border-dashed border-border shrink-0" />
+                              )}
                               <div className="flex-1 min-w-0">
                                 <p className="text-foreground text-sm font-semibold truncate">{p.nome}</p>
                                 {p.descricao && <p className="text-muted-foreground text-[10px] truncate">{p.descricao}</p>}

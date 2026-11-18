@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import arranjosImg from "@/assets/arranjos.jpg";
 import SubscriptionDialog from "@/components/SubscriptionDialog";
+import { ProductThumb } from "@/components/ProductThumb";
 
 const subscriptions = [
   {
@@ -33,6 +34,7 @@ interface Produto {
   preco: number;
   categoria: string | null;
   unit_type: string;
+  image_url?: string | null;
 }
 
 const ArranjosPage = () => {
@@ -43,11 +45,11 @@ const ArranjosPage = () => {
   useEffect(() => {
     supabase
       .from("produtos")
-      .select("id, nome, descricao, preco, categoria, unit_type")
+      .select("id, nome, descricao, preco, categoria, unit_type, image_url")
       .eq("visivel_cliente", true)
       .eq("categoria", "Arranjos")
       .order("sort_order", { ascending: true })
-      .then(({ data }) => setProducts(data || []));
+      .then(({ data }) => setProducts((data as unknown as Produto[]) || []));
   }, []);
 
   const handleAdd = (p: Produto) => {
@@ -69,10 +71,13 @@ const ArranjosPage = () => {
               whileTap={{ scale: 0.98 }}
               className="gradient-card border-warm rounded-xl p-4 flex items-center justify-between"
             >
-              <div>
+              <div className="flex items-center gap-3 min-w-0">
+                <ProductThumb src={p.image_url} alt={p.nome} />
+              <div className="min-w-0">
                 <p className="text-foreground font-semibold text-sm">{p.nome}</p>
                 {p.descricao && <p className="text-muted-foreground text-xs">{p.descricao}</p>}
                 <p className="text-primary font-display font-bold text-lg">R$ {p.preco.toFixed(2)}</p>
+              </div>
               </div>
               {(() => {
                 const inCart = items.some((ci) => ci.id === p.id);

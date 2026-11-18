@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import presentesImg from "@/assets/presentes.jpg";
+import { ProductThumb } from "@/components/ProductThumb";
 
 interface Produto {
   id: string;
@@ -13,6 +14,7 @@ interface Produto {
   descricao: string | null;
   preco: number;
   unit_type: string;
+  image_url?: string | null;
 }
 
 const PresentesPage = () => {
@@ -22,11 +24,11 @@ const PresentesPage = () => {
   useEffect(() => {
     supabase
       .from("produtos")
-      .select("id, nome, descricao, preco, unit_type")
+      .select("id, nome, descricao, preco, unit_type, image_url")
       .eq("visivel_cliente", true)
       .eq("categoria", "Presentes")
       .order("sort_order", { ascending: true })
-      .then(({ data }) => setProducts(data || []));
+      .then(({ data }) => setProducts((data as unknown as Produto[]) || []));
   }, []);
 
   return (
@@ -42,10 +44,13 @@ const PresentesPage = () => {
               whileTap={{ scale: 0.98 }}
               className="gradient-card border-warm rounded-xl p-4 flex items-center justify-between"
             >
-              <div>
+              <div className="flex items-center gap-3 min-w-0">
+                <ProductThumb src={p.image_url} alt={p.nome} />
+              <div className="min-w-0">
                 <p className="text-foreground font-semibold text-sm">{p.nome}</p>
                 {p.descricao && <p className="text-muted-foreground text-xs">{p.descricao}</p>}
                 <p className="text-primary font-display font-bold text-lg">R$ {p.preco.toFixed(2)}</p>
+              </div>
               </div>
               {(() => {
                 const inCart = items.some((ci) => ci.id === p.id);

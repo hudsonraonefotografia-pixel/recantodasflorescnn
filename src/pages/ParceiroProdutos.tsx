@@ -9,6 +9,7 @@ import { ArrowLeft, Package, ShoppingCart } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { ProductThumb } from "@/components/ProductThumb";
 
 const ParceiroProdutosPage = () => {
   const { user, profile } = useAuth();
@@ -88,7 +89,8 @@ const ParceiroProdutosPage = () => {
                       whileTap={{ scale: 0.98 }}
                       className="gradient-card border-warm rounded-xl p-3 flex items-center justify-between"
                     >
-                      <div className="flex-1 min-w-0">
+                      <ProductThumb src={p.image_url} alt={p.nome} />
+                      <div className="flex-1 min-w-0 ml-3">
                         <p className="text-foreground font-semibold text-sm truncate">{p.nome}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge variant="outline" className="text-[9px] px-1.5 py-0">
